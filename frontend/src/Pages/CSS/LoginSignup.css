@@ -7,7 +7,7 @@
 
 .loginsignup-container{
     width: 580px;
-    height: 650px;
+    height: 520px;
     background: white;
     margin: auto;
     padding: 40px 60px;
@@ -78,7 +78,7 @@
 }
 
 .role-selection button {
-    width: 30%; /* Buttons take full width */
+    width: 30%; 
     height: 50px;
     background-color: #ff4141;
     color: white;

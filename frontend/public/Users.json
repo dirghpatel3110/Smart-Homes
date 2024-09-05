@@ -1,0 +1,20 @@
+[
+    {
+        "name":"Dirgh",
+        "email":"dirghpatel3110@gmail.com",
+        "password":"Dirgh@310",
+        "role":"Customer"
+    },
+    {
+        "name":"Vidhi",
+        "email":"vidhipatel3110@gmail.com",
+        "password":"Dirgh@310",
+        "role":"StoreManager"
+    },
+    {
+        "name":"Nisarg",
+        "email":"nisargpatel3110@gmail.com",
+        "password":"Dirgh@310",
+        "role":"Salesman"
+    }
+]
