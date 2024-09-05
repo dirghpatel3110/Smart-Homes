@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './CSS/LoginSignup.css';
+import {useNavigate } from 'react-router-dom';
 
 const LoginSignup = () => {
 
@@ -10,7 +11,7 @@ const[formData,setFormData] = useState({
   password:'',
   email:''
 })
-
+const navigate = useNavigate();
 const changeHandler = (e) => {
     setFormData({...formData,[e.target.name]:e.target.value})
 }
@@ -19,26 +20,34 @@ const handleRoleChange = (role) => {
   setRole(role);
 };
 
+const handleContinue = () => {
+  if (formData.email && formData.password) {
+    navigate('/product'); 
+  } else {
+    alert('Please fill in all fields.');
+  }
+};
+
   return (
     <div className='loginsignup'>
       <div className="loginsignup-container">
         <h1>{state}</h1>
-        <div className="role-selection">
-          <button onClick={() => handleRoleChange('Customer')}>Customer</button>
-          <button onClick={() => handleRoleChange('StoreManager')}>Store Manager</button>
-          <button onClick={() => handleRoleChange('Salesman')}>Salesman</button>
-        </div>
-        <p>Selected Role: {role}</p>
+        {state !== "Sign Up" ? (
+          <div className="role-selection">
+            <button style={{backgroundColor: role==="Customer" ? "black" : "#ff4141"}} onClick={() => handleRoleChange('Customer')}>Customer</button>
+            <button style={{backgroundColor: role==="StoreManager" ? "black" : "#ff4141"}} onClick={() => handleRoleChange('StoreManager')}>Store Manager</button>
+            <button style={{backgroundColor: role==="Salesman" ? "black" : "#ff4141"}} onClick={() => handleRoleChange('Salesman')}>Salesman</button>
+          </div>
+        ) : null}
         <div className="loginsignup-fields">
           {state==='Sign Up'?<input name='username' value={formData.username} onChange={changeHandler} type="text" placeholder='Your Name' autoComplete="off"/>:<></>}
           <input name='email' value={formData.email} onChange={changeHandler} type="email" placeholder='Email Address' autoComplete="off" />
           <input name='password' value={formData.password} onChange={changeHandler} type="password" placeholder='Password' />
         </div>
-        {/* <button onClick={()=>{state==='Login'?login():signup()}} >Continue</button> */}
-        <button>Continue</button>
+        <button onClick={handleContinue}>Continue</button>
         {state==='Sign Up'
         ?<p className='loginsignup-login'>Already have an account? <span onClick={()=>{setState("Login")}} >Login here</span></p>
-        :<p className='loginsignup-login'>Create an account? <span onClick={()=>{setState("Sign Up")}} >Click here</span></p>}
+        :<p style={{display: role !== "Customer" ? 'none' : 'block'}} className='loginsignup-login'>Create an account? <span  onClick={()=>{setState("Sign Up")}} >Click here</span></p>}
       </div>
     </div>
   )
