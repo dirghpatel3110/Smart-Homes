@@ -1,58 +1,73 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './CSS/LoginSignup.css';
-import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const LoginSignup = () => {
-  const [state, setState] = useState("Login");
-  const [role, setRole] = useState("Customer");
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    username: ''
-  });
-  const [users, setUsers] = useState([]);
-  const navigate = useNavigate();
-  
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch('/Users.json');
-        const data = await response.json();
-        setUsers(data);
-      } catch (error) {
-        console.error("Error fetching users:", error);
+
+const[state,setState] = useState("Login");
+const [role, setRole] = useState("Customer");
+const[formData,setFormData] = useState({
+  password:'',
+  email:''
+})
+
+const changeHandler = (e) => {
+    setFormData({...formData,[e.target.name]:e.target.value})
+}
+
+const handleRoleChange = (role) => {
+  console.log(role);
+  setRole(role);
+};
+
+
+const login = async () => {
+    formData.role = role;
+    console.log("Login Function Executed", formData);
+
+    try {
+        const response = await axios.post('http://localhost:8080/Backend_war_exploded/login', formData, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        if (response.status === 200 || response.status === 201) {
+            localStorage.setItem('role', formData?.role);
+            window.location.replace('/product');
+        } else {
+            alert(response?.data?.errors);
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        alert('An error occurred during login.');
+    }
+};
+
+
+const signup = async () => {
+  formData.role = 'Customer';
+  console.log("Sign Up Function Executed", formData);
+  try {
+    const response = await axios.post('http://localhost:8080/Backend_war_exploded/signup', 
+      JSON.stringify(formData), 
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        }
       }
-    };
-    fetchUsers();
-  }, []);
+    );
 
-  const changeHandler = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleRoleChange = (role) => {
-    setRole(role);
-  };
-
-  const handleContinue = () => {
-    const { email, password } = formData;
-    
-    if (!email || !password) {
-      alert('Please fill in all fields.');
-      return;
-    }
-
-    // Check if email, password, and role match any user in the users array
-    const matchingUser = users.find(user => user.email === email && user.password === password && user.role === role);
-
-    if (matchingUser) {
-      // Successful login
-      navigate('/product'); // Redirect to products page or any other page
+    if (response.status === 200 || response.status === 201) {
+      window.location.replace('/');
     } else {
-      // Show an error message
-      alert('Invalid email, password, or role. Please try again.');
+      alert(response?.data?.errors);
     }
-  };
+  } catch (error) {
+    console.error("There was an error during the sign-up process", error);
+    alert('Sign-up failed. Please try again.');
+  }
+};
+
 
   return (
     <div className='loginsignup'>
@@ -81,48 +96,21 @@ const LoginSignup = () => {
           </div>
         ) : null}
         <div className="loginsignup-fields">
-          {state === 'Sign Up' ? (
-            <input
-              name='username'
-              value={formData.username}
-              onChange={changeHandler}
-              type="text"
-              placeholder='Your Name'
-              autoComplete="off"
-            />
-          ) : null}
-          <input
-            name='email'
-            value={formData.email}
-            onChange={changeHandler}
-            type="email"
-            placeholder='Email Address'
-            autoComplete="off"
-          />
-          <input
-            name='password'
-            value={formData.password}
-            onChange={changeHandler}
-            type="password"
-            placeholder='Password'
-          />
+          {state==='Sign Up'?<input name='name' value={formData.name} onChange={changeHandler} type="text" placeholder='Your Name' autoComplete="off"/>:<></>}
+          <input name='email' value={formData.email} onChange={changeHandler} type="email" placeholder='Email Address' autoComplete="off" />
+          <input name='password' value={formData.password} onChange={changeHandler} type="password" placeholder='Password' />
         </div>
-        <button onClick={handleContinue}>Continue</button>
-        {state === 'Sign Up' ? (
-          <p className='loginsignup-login'>
-            Already have an account? <span onClick={() => { setState("Login"); }}>Login here</span>
-          </p>
-        ) : (
-          <p
-            style={{ display: role !== "Customer" ? 'none' : 'block' }}
-            className='loginsignup-login'
-          >
-            Create an account? <span onClick={() => { setState("Sign Up"); }}>Click here</span>
-          </p>
-        )}
+        <button onClick={()=>{state==='Login'?login():signup()}} >Continue</button>
+        {state==='Sign Up'
+        ?<p className='loginsignup-login'>Already have an account? <span onClick={()=>{setState("Login")}} >Login here</span></p>
+        :<p className='loginsignup-login'>Create an account? <span onClick={()=>{setState("Sign Up")}} >Click here</span></p>}
+        <div className="loginsignup-agree">
+          <input type="checkbox" name='' id='' />
+          <p>By continuing, i agree to the terms of use & privacy policy.</p>
+        </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default LoginSignup;
+export default LoginSignup
