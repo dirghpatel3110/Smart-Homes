@@ -1,0 +1,49 @@
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns for the top row */
+    gap: 20px;
+    justify-items: center;
+    margin-top: 20px;
+  }
+  
+  .card {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+    border-radius: 5px;
+    width: 300px;
+    height: 250px; /* Set height to ensure even card size */
+    display: flex;
+    justify-content: center; /* Horizontally center */
+    align-items: center;     /* Vertically center */
+    transition: transform 0.3s ease;
+  }
+
+  .cards span{
+    font-size: 30px;
+    font-weight: 800;
+  }
+  
+  .card:hover {
+    transform: scale(1.1);
+  }
+  
+  /* Adjust for the last two cards */
+  .cards > :nth-child(4),
+  .cards > :nth-child(5) {
+    grid-column: span 1; /* Span one column for the bottom row */
+  }
+  
+  @media (max-width: 600px) {
+    .cards {
+      grid-template-columns: repeat(2, 1fr); /* 2 columns for smaller screens */
+    }
+  
+    .cards > :nth-child(3) {
+      grid-column: span 2; /* Make the 3rd card span across 2 columns */
+    }
+  }
+  
