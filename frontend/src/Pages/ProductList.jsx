@@ -1,375 +1,3 @@
-// import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
-// import Modal from 'react-modal';
-// import './CSS/ProductList.css';
-
-// Modal.setAppElement('#root');
-
-// export default function ProductList() {
-//   const [productsByCategory, setProductsByCategory] = useState({});
-//   const [selectedProduct, setSelectedProduct] = useState(null);
-//   const [modalIsOpen, setModalIsOpen] = useState(false);
-//   const [editModalIsOpen, setEditModalIsOpen] = useState(false);
-//   const [confirmModalIsOpen, setConfirmModalIsOpen] = useState(false);
-//   const [productToDelete, setProductToDelete] = useState(null);
-//   const [editedProduct, setEditedProduct] = useState({
-//     id: '',
-//     name: '',
-//     price: '',
-//     description: '',
-//     category: '',
-//     warranty: '',
-//     accessories: []
-//   });
-//   const [newAccessory, setNewAccessory] = useState({
-//     name: '',
-//     price: '',
-//     description: ''
-//   });
-
-//   const [addModalIsOpen, setAddModalIsOpen] = useState(false);
-//   const [newProduct, setNewProduct] = useState({
-//     name: '',
-//     price: '',
-//     description: '',
-//     category: '',
-//     warranty: '',
-//     accessories: []
-//   });
-
-//   const openAddModal = () => setAddModalIsOpen(true);
-//   const closeAddModal = () => {
-//     setAddModalIsOpen(false);
-//     setNewProduct({
-//       name: '',
-//       price: '',
-//       description: '',
-//       category: '',
-//       warranty: '',
-//       accessories: []
-//     });
-//   };
-
-//   const handleNewProductInputChange = (e) => {
-//     const { name, value } = e.target;
-//     setNewProduct({ ...newProduct, [name]: value });
-//   };
-//   useEffect(() => {
-//     axios.get('http://localhost:8080/Backend_war_exploded/products')
-//       .then(response => {
-//         setProductsByCategory(response.data); 
-//       })
-//       .catch(error => {
-//         console.error('There was an error fetching the products!', error);
-//       });
-//   }, []);
-
-//   const handleDelete = (productId, category) => {
-//     setProductToDelete({ id: productId, category });
-//     setConfirmModalIsOpen(true);
-//   };
-
-//   const confirmDelete = () => {
-//     const { id, category } = productToDelete;
-//     axios.delete(`http://localhost:8080/Backend_war_exploded/products?id=${id}&category=${category}`)
-//       .then(() => {
-//         const updatedProducts = { ...productsByCategory };
-//         updatedProducts[category] = updatedProducts[category].filter(product => product.id !== id);
-//         setProductsByCategory(updatedProducts);
-//         closeConfirmModal();
-//       })
-//       .catch(error => {
-//         console.error('There was an error deleting the product!', error);
-//       });
-//   };
-
-//   const handleView = (productId, category) => {
-//     const product = productsByCategory[category].find(p => p.id === productId);
-//     setSelectedProduct(product);
-//     setModalIsOpen(true);
-//   };
-
-//   const handleEdit = (productId, category) => {
-//     const product = productsByCategory[category].find(p => p.id === productId);
-//     setEditedProduct(product);
-//     setEditModalIsOpen(true);
-//   };
-
-//   const closeModal = () => {
-//     setModalIsOpen(false);
-//     setSelectedProduct(null);
-//   };
-
-//   const closeEditModal = () => {
-//     setEditModalIsOpen(false);
-//     setEditedProduct({
-//       id: '',
-//       name: '',
-//       price: '',
-//       description: '',
-//       category: '',
-//       warranty: '',
-//       accessories: []
-//     });
-//   };
-
-//   const closeConfirmModal = () => {
-//     setConfirmModalIsOpen(false);
-//     setProductToDelete(null);
-//   };
-
-//   const handleInputChange = (e) => {
-//     const { name, value } = e.target;
-//     setEditedProduct({ ...editedProduct, [name]: value });
-//   };
-
-//   const handleAccessoryChange = (index, e) => {
-//     const { name, value } = e.target;
-//     const updatedAccessories = [...editedProduct.accessories];
-//     updatedAccessories[index] = {
-//       ...updatedAccessories[index],
-//       [name]: value
-//     };
-//     setEditedProduct({ ...editedProduct, accessories: updatedAccessories });
-//   };
-
-//   const addAccessory = () => {
-//     setEditedProduct({
-//       ...editedProduct,
-//       accessories: [...editedProduct.accessories, newAccessory]
-//     });
-//     setNewAccessory({ name: '', price: '', description: '' });
-//   };
-
-//   const submitEdit = (e) => {
-//     e.preventDefault();
-
-//     const productToUpdate = {
-//       ...editedProduct,
-//       id: String(editedProduct.id) // Ensure id is a string
-//     };
-
-//     axios.put('http://localhost:8080/Backend_war_exploded/products', productToUpdate)
-//       .then(response => {
-//         if (response.status === 200) {
-//           const updatedProducts = { ...productsByCategory };
-//           updatedProducts[editedProduct.category] = updatedProducts[editedProduct.category].map(product =>
-//             product.id === productToUpdate.id ? productToUpdate : product
-//           );
-//           setProductsByCategory(updatedProducts);
-//           closeEditModal();
-//         }
-//       })
-//       .catch(error => {
-//         console.error('There was an error updating the product!', error);
-//       });
-//   };
-
-//   const submitAddProduct = (e) => {
-//     e.preventDefault();
-
-//     axios.post('http://localhost:8080/Backend_war_exploded/products', newProduct)
-//       .then(response => {
-//         if (response.status === 201) {
-//           const updatedProducts = { ...productsByCategory };
-//           const category = newProduct.category;
-
-//           if (!updatedProducts[category]) {
-//             updatedProducts[category] = [];
-//           }
-
-//           updatedProducts[category].push({ ...newProduct, id: response.data.id });
-//           setProductsByCategory(updatedProducts);
-//           closeAddModal();
-//         }
-//       })
-//       .catch(error => {
-//         console.error('There was an error adding the product!', error);
-//       });
-//   };
-
-//   return (
-//     <div className='list-product'>
-//       <h1>All Products List</h1>
-//       <div className="btn"><p><button className='add' onClick={openAddModal}>ADD</button></p></div>
-//       {Object.keys(productsByCategory).map(category => (
-//         <div key={category}>
-//           <h2>{category}</h2>
-//           <div className="listproduct-format-main">
-//             <p>Id</p>
-//             <p>Name</p>
-//             <p>Price</p>
-//             <p>View</p>
-//             <p>Edit</p>
-//             <p>Remove</p>
-//           </div>
-//           <div className="listproduct-allproduct">
-//             <hr />
-//             {productsByCategory[category].map(product => (
-//               <div key={product.id} className="listproduct-format-main">
-//                 <p>{product.id}</p>
-//                 <p>{product.name}</p>
-//                 <p>${product.price}</p>
-//                 <p><button onClick={() => handleView(product.id, category)}>View</button></p>
-//                 <p><button onClick={() => handleEdit(product.id, category)}>Edit</button></p>
-//                 <p><button onClick={() => handleDelete(product.id, category)}>Remove</button></p>
-//               </div>
-//             ))}
-//           </div>
-//         </div>
-//       ))}
-//       <Modal
-//         isOpen={modalIsOpen}
-//         onRequestClose={closeModal}
-//         contentLabel="Product Details"
-//         className="modal"
-//         overlayClassName="overlay"
-//       >
-//         <h2>Product Details</h2>
-//         {selectedProduct ? (
-//           <div>
-//             <p><strong>Id:</strong> {selectedProduct.id}</p>
-//             <p><strong>Name:</strong> {selectedProduct.name}</p>
-//             <p><strong>Price:</strong> ${selectedProduct.price}</p>
-//             <p><strong>Description:</strong> {selectedProduct.description}</p>
-//             <p><strong>Category:</strong> {selectedProduct.category}</p>
-//             <p><strong>Warranty:</strong> {selectedProduct.warranty}</p>
-//             <p><strong>Accessories:</strong>
-//               <ul>
-//                 {selectedProduct.accessories.length > 0 ? (
-//                   selectedProduct.accessories.map((accessory, index) => (
-//                     <li key={index}>
-//                       {accessory.name} - ${accessory.price}: {accessory.description}
-//                     </li>
-//                   ))
-//                 ) : (
-//                   <li>No accessories available.</li>
-//                 )}
-//               </ul>
-//             </p>
-//           </div>
-//         ) : (
-//           <p>No product details available.</p>
-//         )}
-//         <button onClick={closeModal}>Close</button>
-//       </Modal>
-//       <Modal
-//         isOpen={addModalIsOpen}
-//         onRequestClose={closeAddModal}
-//         contentLabel="Add Product"
-//         className="edit-modal"
-//         overlayClassName="overlay"
-//       >
-//         <h2>Add New Product</h2>
-//         <form onSubmit={submitAddProduct}>
-//           <label>
-//             Name:
-//             <input type="text" name="name" value={newProduct.name} onChange={handleNewProductInputChange} />
-//           </label>
-//           <label>
-//             Price:
-//             <input type="text" name="price" value={newProduct.price} onChange={handleNewProductInputChange} />
-//           </label>
-//           <label>
-//             Description:
-//             <input type="text" name="description" value={newProduct.description} onChange={handleNewProductInputChange} />
-//           </label>
-//           <label>
-//             Category:
-//             <input type="text" name="category" value={newProduct.category} onChange={handleNewProductInputChange} />
-//           </label>
-//           <label>
-//             Warranty:
-//             <input type="text" name="warranty" value={newProduct.warranty} onChange={handleNewProductInputChange} />
-//           </label>
-//           <button type="submit">Add Product</button>
-//           <br />
-//           <button type="button" onClick={closeAddModal}>Cancel</button>
-//         </form>
-//       </Modal>
-//       <Modal
-//         isOpen={editModalIsOpen}
-//         onRequestClose={closeEditModal}
-//         contentLabel="Edit Product"
-//         className="edit-modal"
-//         overlayClassName="overlay"
-//       >
-//         <h2>Edit Product</h2>
-//         <form onSubmit={submitEdit}>
-//           <label>
-//             Name:
-//             <input type="text" name="name" value={editedProduct.name} onChange={handleInputChange} />
-//           </label>
-//           <label>
-//             Price:
-//             <input type="text" name="price" value={editedProduct.price} onChange={handleInputChange} />
-//           </label>
-//           <label>
-//             Description:
-//             <input type="text" name="description" value={editedProduct.description} onChange={handleInputChange} />
-//           </label>
-//           <label>
-//             Category:
-//             <input type="text" name="category" value={editedProduct.category} onChange={handleInputChange} />
-//           </label>
-//           <label>
-//             Warranty:
-//             <input type="text" name="warranty" value={editedProduct.warranty} onChange={handleInputChange} />
-//           </label>
-//           <h4>Edit Accessories:</h4>
-//           {editedProduct.accessories.map((accessory, index) => (
-//             <div key={index}>
-//               <label>
-//                 Name:
-//                 <input
-//                   type="text"
-//                   name="name"
-//                   value={accessory.name}
-//                   onChange={(e) => handleAccessoryChange(index, e)}
-//                 />
-//               </label>
-//               <label>
-//                 Price:
-//                 <input
-//                   type="text"
-//                   name="price"
-//                   value={accessory.price}
-//                   onChange={(e) => handleAccessoryChange(index, e)}
-//                 />
-//               </label>
-//               <label>
-//                 Description:
-//                 <input
-//                   type="text"
-//                   name="description"
-//                   value={accessory.description}
-//                   onChange={(e) => handleAccessoryChange(index, e)}
-//                 />
-//               </label>
-//             </div>
-//           ))}
-//           <button type="submit">Save Changes</button>
-//           <br />
-//           <button type="button" className="cancel-button" onClick={closeEditModal}>Cancel</button>
-//         </form>
-//       </Modal>
-//       <Modal
-//         isOpen={confirmModalIsOpen}
-//         onRequestClose={closeConfirmModal}
-//         contentLabel="Confirm Delete"
-//         className="confirm-modal"
-//         overlayClassName="overlay"
-//       >
-//         <h2>Confirm Delete</h2>
-//         <p>Are you sure you want to delete this product?</p>
-//         <button onClick={confirmDelete}>Yes</button> &nbsp;
-//         <button onClick={closeConfirmModal}>No</button>
-//       </Modal>
-//     </div>
-//   );
-// }
-
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
@@ -398,8 +26,6 @@ export default function ProductList() {
     price: '',
     description: ''
   });
-
-  /////////// Add Product Modal ////////////////////////////
   const [addModalIsOpen, setAddModalIsOpen] = useState(false);
   const [newProduct, setNewProduct] = useState({
     name: '',
@@ -422,7 +48,7 @@ export default function ProductList() {
       warranty: '',
       accessories: []
     });
-    setNewAccessoryForAdd({ name: '', price: '', description: '' }); // Reset accessory input when closing
+    setNewAccessoryForAdd({ name: '', price: '', description: '' }); 
   };
 
   const handleNewProductInputChange = (e) => {
@@ -430,7 +56,6 @@ export default function ProductList() {
     setNewProduct({ ...newProduct, [name]: value });
   };
 
-  /////////// New Functions for Adding Accessories in Add Modal ///////////
   const handleNewAccessoryForAddChange = (e) => {
     const { name, value } = e.target;
     setNewAccessoryForAdd({ ...newAccessoryForAdd, [name]: value });
@@ -441,15 +66,15 @@ export default function ProductList() {
       ...newProduct,
       accessories: [...newProduct.accessories, newAccessoryForAdd]
     });
-    setNewAccessoryForAdd({ name: '', price: '', description: '' }); // Reset after adding
+    setNewAccessoryForAdd({ name: '', price: '', description: '' }); 
   };
 
   /////////////////////////////////////////////////////////////////////////
 
   useEffect(() => {
-    axios.get('http://localhost:8080/Backend_war_exploded/products')
+    axios.get('http://localhost:8080/backend_war_exploded/products')
       .then(response => {
-        setProductsByCategory(response.data); // Now it's categorized by type
+        setProductsByCategory(response.data); 
       })
       .catch(error => {
         console.error('There was an error fetching the products!', error);
@@ -463,9 +88,8 @@ export default function ProductList() {
 
   const confirmDelete = () => {
     const { id, category } = productToDelete;
-    axios.delete(`http://localhost:8080/Backend_war_exploded/products?id=${id}&category=${category}`)
+    axios.delete(`http://localhost:8080/backend_war_exploded/products?id=${id}&category=${category}`)
       .then(() => {
-        // Update the product list after deletion
         const updatedProducts = { ...productsByCategory };
         updatedProducts[category] = updatedProducts[category].filter(product => product.id !== id);
         setProductsByCategory(updatedProducts);
@@ -542,10 +166,9 @@ export default function ProductList() {
       id: String(editedProduct.id) // Ensure id is a string
     };
 
-    axios.put('http://localhost:8080/Backend_war_exploded/products', productToUpdate)
+    axios.put('http://localhost:8080/backend_war_exploded/products', productToUpdate)
       .then(response => {
         if (response.status === 200) {
-          // Update the product list
           const updatedProducts = { ...productsByCategory };
           updatedProducts[editedProduct.category] = updatedProducts[editedProduct.category].map(product =>
             product.id === productToUpdate.id ? productToUpdate : product
@@ -562,7 +185,7 @@ export default function ProductList() {
   const submitAddProduct = (e) => {
     e.preventDefault();
 
-    axios.post('http://localhost:8080/Backend_war_exploded/products', newProduct)
+    axios.post('http://localhost:8080/backend_war_exploded/products', newProduct)
       .then(response => {
         if (response.status === 201) {
           const updatedProducts = { ...productsByCategory };
@@ -612,8 +235,6 @@ export default function ProductList() {
           </div>
         </div>
       ))}
-
-      {/* View Product Modal */}
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
@@ -644,8 +265,6 @@ export default function ProductList() {
         )}
         <button onClick={closeModal} className="cancel-button">Close</button>
       </Modal>
-
-      {/* Add Product Modal */}
       <Modal
         isOpen={addModalIsOpen}
         onRequestClose={closeAddModal}
@@ -679,8 +298,6 @@ export default function ProductList() {
           </div>
         </form>
       </Modal>
-
-      {/* Edit Product Modal */}
       <Modal
         isOpen={editModalIsOpen}
         onRequestClose={closeEditModal}
@@ -758,8 +375,6 @@ export default function ProductList() {
           </div>
         </form>
       </Modal>
-
-      {/* Confirm Delete Modal */}
       <Modal
         isOpen={confirmModalIsOpen}
         onRequestClose={closeConfirmModal}
@@ -777,3 +392,5 @@ export default function ProductList() {
     </div>
   );
 }
+
+

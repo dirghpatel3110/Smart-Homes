@@ -19,7 +19,7 @@ const Signup = () => {
     console.log("Sign Up Function Executed", formData);
     
     try {
-      const response = await axios.post('http://localhost:8080/Backend_war_exploded/signup', 
+      const response = await axios.post('http://localhost:8080/backend_war_exploded/signup', 
         JSON.stringify(formData), 
         {
           headers: {

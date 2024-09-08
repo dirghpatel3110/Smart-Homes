@@ -1,0 +1,89 @@
+/* ProductCard.css */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .product-card {
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+  }
+  
+  .product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .product-info {
+    padding: 10px;
+  }
+  
+  .product-info h3 {
+    margin: 10px 0;
+    font-size: 1.2rem;
+  }
+  
+  .product-info p {
+    margin: 5px 0;
+    color: #555;
+  }
+  
+  /* Add to your ProductCard.css */
+.category-filter {
+    margin: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+  }
+  
+  .category-filter label {
+    margin-right: 10px;
+  }
+  
+  .category-filter select {
+    padding: 8px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    color: #333;
+  }
+  
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+  }
+  
+
+  .product-card {
+    /* Add styles for the product card */
+  }
+  
+  .product-info {
+    /* Add styles for product info */
+  }
+  
+  .product-details {
+    /* Add styles for the detailed view */
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+  }
+  
+  .product-detail {
+    /* Add styles for the product detail section */
+    border-top: 2px solid #ddd;
+    padding: 20px;
+  }
+  

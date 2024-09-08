@@ -23,13 +23,16 @@ const Login = () => {
     console.log("Login Function Executed", formData);
 
     try {
-      const response = await axios.post('http://localhost:8080/Backend_war_exploded/login', formData, {
+      const response = await axios.post('http://localhost:8080/backend_war_exploded/login', formData, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
+
       if (response.status === 200 || response.status === 201) {
-        localStorage.setItem('role', formData?.role);
+        localStorage.setItem('name', response?.data?.name);
+        localStorage.setItem('email', response?.data?.email);
+        localStorage.setItem('role', response?.data?.role);
         window.location.replace('/product');
       } else {
         alert(response?.data?.errors);
