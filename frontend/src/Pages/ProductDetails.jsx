@@ -16,10 +16,11 @@
 //     if (product) {
 //       const calculateTotalPrice = () => {
 //         const accessoriesTotal = selectedAccessories.reduce((sum, accessory) => {
-//           const accessoryQuantity = accessoryQuantities[accessory.name] || 1;
-//           return sum + (parseInt(accessory.price) * accessoryQuantity);
+//           const accessoryQuantity = accessoryQuantities[accessory.name] || 0;
+//           return sum + (parseFloat(accessory.price) * accessoryQuantity);
 //         }, 0);
-//         return (product.price * quantity) + accessoriesTotal;
+//         const total = (product.price * quantity) + accessoriesTotal;
+//         return parseFloat(total.toFixed(2));
 //       };
 //       setTotalPrice(calculateTotalPrice());
 //     }
@@ -57,6 +58,14 @@
 //     setAccessoryQuantities((prevQuantities) => {
 //       const currentQuantity = prevQuantities[accessory.name] || 1;
 //       const newQuantity = currentQuantity + delta;
+
+//       // If new quantity is 0, remove accessory from selectedAccessories
+//       if (newQuantity === 0) {
+//         setSelectedAccessories((prevAccessories) =>
+//           prevAccessories.filter((a) => a.name !== accessory.name)
+//         );
+//       }
+
 //       return {
 //         ...prevQuantities,
 //         [accessory.name]: newQuantity >= 0 ? newQuantity : 1, // Ensure accessory quantity is at least 1
@@ -110,12 +119,25 @@
 // export default ProductDetails;
 
 
+
+
+
+
+
+
+
+
+
+
+
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './CSS/ProductDetails.css';
 
 const ProductDetails = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const product = location.state?.product;
 
   const [quantity, setQuantity] = useState(0);
@@ -123,7 +145,7 @@ const ProductDetails = () => {
   const [accessoryQuantities, setAccessoryQuantities] = useState({});
   const [totalPrice, setTotalPrice] = useState(product.price);
 
-  // Ensure the total price is updated whenever quantity or selected accessories change
+
   useEffect(() => {
     if (product) {
       const calculateTotalPrice = () => {
@@ -148,11 +170,11 @@ const ProductDetails = () => {
       if (!existingAccessory) {
         setAccessoryQuantities((prevQuantities) => ({
           ...prevQuantities,
-          [accessory.name]: 1, // Set initial quantity to 1 when accessory is added
+          [accessory.name]: 1,
         }));
         return [...prevAccessories, accessory];
       }
-      return prevAccessories; // If already selected, do nothing
+      return prevAccessories;
     });
   };
 
@@ -171,7 +193,6 @@ const ProductDetails = () => {
       const currentQuantity = prevQuantities[accessory.name] || 1;
       const newQuantity = currentQuantity + delta;
 
-      // If new quantity is 0, remove accessory from selectedAccessories
       if (newQuantity === 0) {
         setSelectedAccessories((prevAccessories) =>
           prevAccessories.filter((a) => a.name !== accessory.name)
@@ -180,9 +201,40 @@ const ProductDetails = () => {
 
       return {
         ...prevQuantities,
-        [accessory.name]: newQuantity >= 0 ? newQuantity : 1, // Ensure accessory quantity is at least 1
+        [accessory.name]: newQuantity >= 0 ? newQuantity : 1,
       };
     });
+  };
+
+  const handleAddToCart = async () => {
+    const email = localStorage.getItem('email'); // Fetch email from local storage
+    if (!email) {
+      console.error('User email not found in local storage.');
+      return;
+    }
+    
+    const cartData = {
+      email,
+      action: 'add',
+      productId: product.id,
+      name: product.name,
+      price: product.price,
+      category: product.category,
+      quantity: quantity,
+      accessories: selectedAccessories.map((a) => ({ ...a, quantity: accessoryQuantities[a.name] || 1 }))
+    };
+    console.log(cartData)
+
+    try {
+      await axios.post('http://localhost:8080/backend_war_exploded/cart', cartData, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      navigate('/cart');
+    } catch (error) {
+      console.error('Error adding product to cart:', error);
+    }
   };
 
   return (
@@ -202,7 +254,7 @@ const ProductDetails = () => {
             {product.accessories.map((accessory, index) => (
               <li key={index} onClick={() => handleAccessoryClick(accessory)}>
                 <div className="accessory-info">
-                  <strong>{accessory.name ? accessory.name : 'Unnamed accessory'}</strong>
+                  <strong>{accessory.name || 'Unnamed accessory'}</strong>
                   <p><strong>Description:</strong> {accessory.description || 'No description'}</p>
                   <p><strong>Price:</strong> ${accessory.price}</p>
                   {selectedAccessories.find((a) => a.name === accessory.name) && (
@@ -221,7 +273,7 @@ const ProductDetails = () => {
         )}
       </div>
       <div className="add-to-cart-container">
-        <button className="add-to-cart-button">Add to Cart</button>
+        <button className="add-to-cart-button" onClick={handleAddToCart}>Add to Cart</button>
         <p className="total-price">Total: ${totalPrice}</p>
       </div>
     </div>
@@ -229,3 +281,9 @@ const ProductDetails = () => {
 };
 
 export default ProductDetails;
+
+
+
+
+
+
