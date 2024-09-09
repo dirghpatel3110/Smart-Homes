@@ -66,12 +66,13 @@
 import React, { useState, useEffect } from 'react';
 import './Navbar.css';
 import cart_icon from '../../Assets/cart_icon.png';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const [role, setRole] = useState('');
   const [activeLink, setActiveLink] = useState('');
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Retrieve the role from localStorage
@@ -114,7 +115,7 @@ const Navbar = () => {
                 textDecoration: 'none',
               }}
             >
-              Custmor
+              Customer
             </Link>
           </button>
         ) : role === "StoreManager" ? (
@@ -136,7 +137,7 @@ const Navbar = () => {
           </button>
         ) : null}
         
-        <button>Logout</button>
+        <button onClick={()=>{localStorage.clear(); navigate("/")}}>Logout</button>
         <Link to='/cart'>
           <img src={cart_icon} alt="cart_icon" />
         </Link>
