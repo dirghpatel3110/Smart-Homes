@@ -7,12 +7,15 @@ export default function Order() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showConfirmPopup, setShowConfirmPopup] = useState(false);
+  const [showConfirmPop, setShowConfirmPop] = useState(false); 
+  const [showUpdatePop, setShowUpdatePop] = useState(false); 
   const [orderToRemove, setOrderToRemove] = useState(null);
+  const [orderToUpdate, setOrderToUpdate] = useState(null);
+  const [newStatus, setNewStatus] = useState("");
   const [role, setRole] = useState(null);
 
   useEffect(() => {
-    const storedRole = localStorage.getItem("role"); 
+    const storedRole = localStorage.getItem("role");
     setRole(storedRole);
 
     if (storedRole === "Customer") {
@@ -26,7 +29,6 @@ export default function Order() {
       axios
         .get(`http://localhost:8080/backend_war_exploded/getOrders?email=${email}`)
         .then((response) => {
-          console.log(response.data)
           setProducts(response.data);
           setLoading(false);
         })
@@ -36,7 +38,7 @@ export default function Order() {
         });
     } else if (storedRole === "Salesman") {
       axios
-        .get("http://localhost:8080/backend_war_exploded/getOrders") 
+        .get("http://localhost:8080/backend_war_exploded/getOrders")
         .then((response) => {
           setProducts(response.data);
           setLoading(false);
@@ -50,7 +52,7 @@ export default function Order() {
 
   const handleRemove = (orderID) => {
     setOrderToRemove(orderID);
-    setShowConfirmPopup(true);
+    setShowConfirmPop(true); // show confirm pop
   };
 
   const confirmRemove = () => {
@@ -59,20 +61,55 @@ export default function Order() {
       .delete(removeUrl)
       .then((response) => {
         setProducts(products.filter((product) => product.orderID !== orderToRemove));
-        setShowConfirmPopup(false);
+        setShowConfirmPop(false); 
         setOrderToRemove(null);
       })
       .catch((error) => {
         console.error("There was an error removing the product:", error.message);
         setError("Failed to remove product. Please try again.");
-        setShowConfirmPopup(false);
+        setShowConfirmPop(false);
         setOrderToRemove(null);
       });
   };
 
   const cancelRemove = () => {
-    setShowConfirmPopup(false);
+    setShowConfirmPop(false); 
     setOrderToRemove(null);
+  };
+
+  const handleUpdate = (orderID, newStatus) => {
+    const updateUrl = `http://localhost:8080/backend_war_exploded/updateOrder`;
+
+    axios
+      .put(updateUrl, { orderID, status: newStatus })
+      .then((response) => {
+        setProducts(
+          products.map((product) =>
+            product.orderID === orderID
+              ? { ...product, status: newStatus }
+              : product
+          )
+        );
+        setShowUpdatePop(false); 
+        setOrderToUpdate(null);
+        setNewStatus("");
+      })
+      .catch((error) => {
+        console.error("There was an error updating the order:", error.message);
+        setError("Failed to update order. Please try again.");
+      });
+  };
+
+  const handleOpenUpdatePop = (orderID, currentStatus) => {
+    setOrderToUpdate(orderID);
+    setNewStatus(currentStatus);
+    setShowUpdatePop(true); 
+  };
+
+  const cancelUpdate = () => {
+    setShowUpdatePop(false); 
+    setOrderToUpdate(null);
+    setNewStatus("");
   };
 
   if (loading) return <p>Loading...</p>;
@@ -83,35 +120,35 @@ export default function Order() {
       <Navbar />
       <div className="list-product1">
         <div className="listproduct-format-main1">
-          {role === "Customer" ? (
+          <p>Name</p>
+          <p>Product Name</p>
+          {role === "Salesman" ? (
             <>
-              <p>Name</p>
-              <p>Product Name</p>
-              <p>Price</p>
-              <p>Order Status</p>
+              <p>Update Order</p>
+              <p>Remove</p>
             </>
           ) : (
             <>
-              <p>Name</p>
-              <p>Product Name</p>
-              <p>Update Order</p>
-              <p>Remove</p>
+              <p>Price</p>
+              <p>Order Status</p>
             </>
           )}
         </div>
         {products.map((product) => (
           <div key={product.orderID} className="listproduct-item">
-            {console.log(product)}
             <p>{product.name}</p>
             {product.cartData && product.cartData.length > 0 ? (
               <>
                 <p>{product.cartData[0].name}</p>
                 {role === "Customer" ? (
-                  <p>${product.cartData[0].price}</p> 
+                  <p>${product.cartData[0].price}</p>
                 ) : (
-                  <button onClick={() => console.log("Update Order Clicked")}>
+                  <button
+                    className="update-order"
+                    onClick={() => handleOpenUpdatePop(product.orderID, product.status || "Pending")}
+                  >
                     Update Order
-                  </button> 
+                  </button>
                 )}
               </>
             ) : (
@@ -124,7 +161,7 @@ export default function Order() {
               <p>{product.status || "Pending"}</p>
             ) : (
               <>
-                <button onClick={() => handleRemove(product.orderID)}>
+                <button className="remove-button" onClick={() => handleRemove(product.orderID)}>
                   Remove
                 </button>
               </>
@@ -133,9 +170,9 @@ export default function Order() {
         ))}
       </div>
 
-      {showConfirmPopup && (
-        <div className="confirmation-popup1">
-          <div className="confirmation-popup-content1">
+      {showConfirmPop && ( 
+        <div className="confirmation-pop1">
+          <div className="confirmation-pop-content1">
             <p>Are you sure you want to cancel this order?</p>
             <button className="cancel-button" onClick={cancelRemove}>
               Cancel
@@ -146,6 +183,32 @@ export default function Order() {
           </div>
         </div>
       )}
+
+      {showUpdatePop && ( 
+        <div className="update-pop1">
+          <div className="update-pop-content1">
+            <p>Update status for order {orderToUpdate}:</p>
+            <select
+              onChange={(e) => setNewStatus(e.target.value)}
+              value={newStatus}
+            >
+              <option value="Pending">Pending</option>
+              <option value="Shipped">Shipped</option>
+              <option value="Delivered">Delivered</option>
+            </select>
+            <button className="cancel-button" onClick={cancelUpdate}>
+              Cancel
+            </button>
+            <button
+              className="confirm-button"
+              onClick={() => handleUpdate(orderToUpdate, newStatus)}
+            >
+              Update
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
+
