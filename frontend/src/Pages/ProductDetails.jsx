@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './CSS/ProductDetails.css';
+import Navbar from '../Components/Navbar/Navbar';
 
 const ProductDetails = () => {
   const location = useLocation();
@@ -106,6 +107,8 @@ const ProductDetails = () => {
   };
 
   return (
+    <>
+    <Navbar/>
     <div className="product-detail">
       <h2><strong>Name: </strong>{product.name}</h2>
       <p><strong>Description: </strong>{product.description}</p>
@@ -145,6 +148,7 @@ const ProductDetails = () => {
         <p className="total-price">Total: ${totalPrice}</p>
       </div>
     </div>
+    </>
   );
 };
 

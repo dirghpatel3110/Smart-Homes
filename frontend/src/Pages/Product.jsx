@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ProductCard from '../Components/ProductCard/ProductCard'; // Ensure the path is correct
+import Navbar from '../Components/Navbar/Navbar';
 
 const Product = () => {
+  
   const [products, setProducts] = useState({});
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -40,6 +42,8 @@ const Product = () => {
   };
 
   return (
+    <>
+    <Navbar/>
     <div>
       <div className="category-filter">
         <label htmlFor="category">Filter by category:</label>
@@ -73,6 +77,7 @@ const Product = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 

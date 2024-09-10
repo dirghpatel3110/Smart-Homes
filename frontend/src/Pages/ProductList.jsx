@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
 import './CSS/ProductList.css';
+import Navbar from "../Components/Navbar/Navbar";
 
 Modal.setAppElement('#root');
 
 export default function ProductList() {
+  
   const [productsByCategory, setProductsByCategory] = useState({});
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -206,6 +208,8 @@ export default function ProductList() {
   };
 
   return (
+    <>
+    <Navbar/>
     <div className='list-product'>
       <h1>All Products List</h1>
       <div className="btn"><p><button className='add' onClick={openAddModal}>ADD</button></p></div>
@@ -390,6 +394,7 @@ export default function ProductList() {
         </div>
       </Modal>
     </div>
+    </>
   );
 }
 

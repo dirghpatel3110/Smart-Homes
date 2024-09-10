@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './CSS/Signup.css'; // Importing the CSS file
+import { Link } from 'react-router-dom';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -48,7 +49,7 @@ const Signup = () => {
         <input className='signup-input' name='password' value={formData.password} onChange={changeHandler} type="password" placeholder='Password' />
       </div>
       <button className='signup-button' onClick={()=>signup()}>Continue</button>
-      <p className='signup-login-redirect'>Already have an account? <a href="/login" className='signup-link'>Login here</a></p>
+      <p className='signup-login-redirect'>Already have an account? <Link to="/" className='signup-link'>Login here</Link></p>
     </div>
   );
 };

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./CSS/CartPage.css";
 import CheckoutForm from "./CheckoutForm";
+import Navbar from "../Components/Navbar/Navbar";
 
 const Cart = () => {
   const [cartData, setCartData] = useState([]);
@@ -96,6 +97,8 @@ const Cart = () => {
   }
 
   return (
+    <>
+    <Navbar/>
     <div className="container">
       <div className="cart-container">
         <h2>Total Items in Cart: {totalItems}</h2>{" "}
@@ -150,6 +153,7 @@ const Cart = () => {
           onClick={() => setIsCheckingOut(true)}>PROCEED TO CHECKOUT</button>
       </div>
     </div>
+    </>
   );
 };
 

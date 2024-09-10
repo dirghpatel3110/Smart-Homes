@@ -3,7 +3,7 @@ import { BrowserRouter,Routes,Route } from 'react-router-dom';
 import Login from './Pages/Login';
 import Signup from './Pages/Signup';
 import Product from './Pages/Product';
-import Navbar from './Components/Navbar/Navbar';
+// import Navbar from './Components/Navbar/Navbar';
 import ProductList from './Pages/ProductList';
 import ProductDetails from './Pages/ProductDetails';
 import CartPage from './Pages/CartPage';
@@ -14,7 +14,7 @@ function App() {
   return (
     <div>
       <BrowserRouter>
-      <Navbar/>
+      {/* <Navbar/> */}
       <Routes>
       <Route path="/" element={<Login/>} />
       <Route path="/signup" element={<Signup/>} />

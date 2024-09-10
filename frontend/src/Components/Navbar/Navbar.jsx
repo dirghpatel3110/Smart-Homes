@@ -38,15 +38,15 @@ const Navbar = () => {
       <div className="nav-login-cart">
         {role === "Salesman" ? (
           <button
-            onClick={() => handleClick('/custmor-list')}
+            onClick={() => handleClick('/order')}
             style={{
-              color: activeLink === '/custmor-list' ? 'blue' : '#515151',
+              color: activeLink === '/order' ? 'blue' : '#515151',
             }}
           >
             <Link
-              to='/custmor-list'
+              to='/order'
               style={{
-                color: activeLink === '/custmor-list' ? 'blue' : '#515151',
+                color: activeLink === '/order' ? 'blue' : '#515151',
                 textDecoration: 'none',
               }}
             >
