@@ -100,7 +100,7 @@ const DeliveryForm = ({cartData, onSubmit, onCancel }) => {
       creditCard,
       phoneNumber,
     };
-    console.log(payload)
+    console.log(payload);
     axios
       .post("http://localhost:8080/backend_war_exploded/storedata", payload)
       .then((response) => {
@@ -231,7 +231,6 @@ const CheckoutForm = (cartData) => {
           onCancel={() => setShowDeliveryForm(false)}
         />
       )}
-      {/* {checkoutData && <p>Checkout successful: {JSON.stringify(checkoutData)}</p>} */}
     </div>
   );
 };

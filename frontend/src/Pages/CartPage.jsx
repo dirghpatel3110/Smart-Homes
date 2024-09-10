@@ -2,14 +2,12 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./CSS/CartPage.css";
 import CheckoutForm from "./CheckoutForm";
-import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const [cartData, setCartData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
-  const navigate = useNavigate();
   useEffect(() => {
     const email = localStorage.getItem("email");
 
@@ -74,7 +72,9 @@ const Cart = () => {
   };
 
   const handleCheckoutComplete = (confirmationData) => {
-    
+    // Handle checkout completion, e.g., show confirmation message
+    alert(`Order placed! Confirmation number: ${confirmationData.confirmationNumber}`);
+    // Optionally, clear the cart or navigate to another page
   };
 
   // Calculate total number of items in the cart
@@ -147,7 +147,7 @@ const Cart = () => {
           <p>Your cart is empty.</p>
         )}
         <button className="checkout" 
-          onClick={() => {setIsCheckingOut(true); navigate("/checkout")}}>PROCEED TO CHECKOUT</button>
+          onClick={() => setIsCheckingOut(true)}>PROCEED TO CHECKOUT</button>
       </div>
     </div>
   );

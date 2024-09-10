@@ -7,7 +7,7 @@ import Navbar from './Components/Navbar/Navbar';
 import ProductList from './Pages/ProductList';
 import ProductDetails from './Pages/ProductDetails';
 import CartPage from './Pages/CartPage';
-import CheckoutForm from './Pages/CheckoutForm';
+import Order from './Pages/Order';
 
 
 function App() {
@@ -22,7 +22,7 @@ function App() {
       <Route path="/product/:id" element={<ProductDetails />} />
       <Route path='/product-list' element={<ProductList/>}/>
       <Route path="/cart" element={<CartPage/>} />
-      <Route path='/Checkout' element={<CheckoutForm/>}/>
+      <Route path="/order" element={<Order/>}/>
       </Routes>
       </BrowserRouter>
     </div>

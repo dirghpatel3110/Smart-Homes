@@ -1,68 +1,3 @@
-// import React, { useState, useEffect } from 'react';
-// import './Navbar.css';
-// import cart_icon from '../../Assets/cart_icon.png';
-// import { Link, useLocation } from 'react-router-dom';
-
-// const Navbar = () => {
-//   const [role, setRole] = useState('');
-//   const [activeLink, setActiveLink] = useState('');
-  
-//   const location = useLocation();
-
-//   useEffect(() => {
-//     const storedRole = localStorage.getItem('role');
-//     setRole(storedRole);
-//     setActiveLink(location.pathname);
-//   }, [location]);
-
-//   const handleClick = (link) => {
-//     setActiveLink(link);
-//   };
-//   console.log(role)
-
-//   return (
-//     <div className='navbar'>
-//       <div className="nav-logo">
-//         <Link to="/product">
-//           <p>SMARTHOMES</p>
-//         </Link>
-//       </div>
-//       <div className="nav-login-cart">
-//         {role === "Salesman" ? (
-//           <button
-//             onClick={() => handleClick('/Customer-list')}
-//             style={{
-//               color: activeLink === '/Customer-list' ? 'blue' : '#515151',
-//             }}
-//           >
-//             <Link
-//               to='/Customer-list'
-//               style={{
-//                 color: activeLink === '/Customer-list' ? 'blue' : '#515151',
-//                 textDecoration: 'none',
-//               }}
-//             >
-//               Customer
-//             </Link>
-//           </button>
-//         ) : role === "Store Manager" ? (
-//           <button><Link to='/product-list'>Product-list</Link></button>
-//         ) : null}
-        
-//         <button>Logout</button>
-//         <Link to='/cart'>
-//           <img src={cart_icon} alt="cart_icon" />
-//         </Link>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Navbar;
-
-
-
-
 import React, { useState, useEffect } from 'react';
 import './Navbar.css';
 import cart_icon from '../../Assets/cart_icon.png';
@@ -135,7 +70,22 @@ const Navbar = () => {
               Product list
             </Link>
           </button>
-        ) : null}
+        ) : role === "Customer" ? (<button
+          onClick={() => handleClick('/order')}
+          style={{
+            color: activeLink === '/order' ? 'blue' : '#515151',
+          }}
+        >
+          <Link
+            to='/order'
+            style={{
+              color: activeLink === '/order' ? 'blue' : '#515151',
+              textDecoration: 'none',
+            }}
+          >
+            Order
+          </Link>
+        </button>): null}
         
         <button onClick={()=>{localStorage.clear(); navigate("/")}}>Logout</button>
         <Link to='/cart'>

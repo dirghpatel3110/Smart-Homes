@@ -1,0 +1,87 @@
+body {
+    font-family: Arial, sans-serif;
+  }
+  
+  .list-product1 {
+    width: 80%;
+    margin: 20px auto;
+  }
+  
+  .listproduct-format-main1,
+  .listproduct-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+  }
+  
+  .listproduct-format-main1 {
+    border-bottom: 2px solid #ddd;
+    font-weight: bold;
+    background-color: #f4f4f4;
+  }
+  
+  .listproduct-item {
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .listproduct-item p {
+    margin: 0;
+    padding: 0;
+    flex: 1;
+  }
+  
+  button {
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #c0392b;
+  }
+  
+  .confirmation-popup1 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .confirmation-popup-content1 {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    width: 300px;
+  }
+  
+  .confirmation-popup-content1 button {
+    margin: 0 10px;
+  }
+  
+  .confirmation-popup-content1 .cancel-button,
+  .confirmation-popup-content1 .confirm-button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .confirmation-popup-content1 .cancel-button {
+    background-color: #ccc;
+  }
+  
+  .confirmation-popup-content1 .confirm-button {
+    background-color: #e74c3c;
+    color: #fff;
+  }
+  
