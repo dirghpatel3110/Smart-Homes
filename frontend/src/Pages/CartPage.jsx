@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./CSS/CartPage.css";
 import CheckoutForm from "./CheckoutForm";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const [cartData, setCartData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const email = localStorage.getItem("email");
 
@@ -28,6 +29,9 @@ const Cart = () => {
       setLoading(false);
     }
   }, []);
+
+  console.log(cartData)
+
   const handleRemoveProduct = (productId) => {
     const email = localStorage.getItem("email");
 
@@ -70,9 +74,7 @@ const Cart = () => {
   };
 
   const handleCheckoutComplete = (confirmationData) => {
-    // Handle checkout completion, e.g., show confirmation message
-    alert(`Order placed! Confirmation number: ${confirmationData.confirmationNumber}`);
-    // Optionally, clear the cart or navigate to another page
+    
   };
 
   // Calculate total number of items in the cart
@@ -90,7 +92,7 @@ const Cart = () => {
   }
 
   if (isCheckingOut) {
-    return <CheckoutForm onCheckoutComplete={handleCheckoutComplete} />;
+    return <CheckoutForm cartData={cartData} onCheckoutComplete={handleCheckoutComplete} />;
   }
 
   return (
@@ -116,7 +118,7 @@ const Cart = () => {
                   <strong>Category:</strong> {product.category}
                 </p>
                 {product.accessories && product.accessories.length > 0 && (
-                  <div className="accessories">
+                  <div className="accessories1">
                     <h3>Accessories:</h3>
                     <ul>
                       {product.accessories.map((accessory, idx) => (
@@ -144,8 +146,8 @@ const Cart = () => {
         ) : (
           <p>Your cart is empty.</p>
         )}
-        <button className="checkout"
-          onClick={() => setIsCheckingOut(true)}>PROCEED TO CHECKOUT</button>
+        <button className="checkout" 
+          onClick={() => {setIsCheckingOut(true); navigate("/checkout")}}>PROCEED TO CHECKOUT</button>
       </div>
     </div>
   );

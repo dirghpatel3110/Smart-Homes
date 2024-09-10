@@ -12,9 +12,10 @@
     margin-bottom: 10px;
   }
   
-  p {
+  .product-detail p {
     font-size: 16px;
     margin-bottom: 10px;
+    
   }
   
   .quantity-container {
@@ -24,15 +25,23 @@
   .quantity-container button {
     padding: 5px 10px;
     font-size: 16px;
-    margin: 0 5px;
+    margin: 15px 15px;
     cursor: pointer;
   }
   
   .accessories-container {
     display: flex;
     flex-wrap: wrap;
+    flex-direction: column;
     gap: 20px;
     margin-top: 20px;
+  }
+
+  .accessories{
+    font-size: 30px;
+    font-weight: 900;
+    margin-top: 30px;
+    margin-bottom: 20px;
   }
   
   .accessory-info {
@@ -40,11 +49,11 @@
     background-color: white;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    width: 200px;
+    width: 450px;
   }
   
   .accessory-info p {
-    margin: 5px 0;
+    font-size: 17px;
   }
   
   .accessory-quantity-container {

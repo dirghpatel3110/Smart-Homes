@@ -2,17 +2,22 @@ import React, { useState } from "react";
 import axios from "axios";
 import './CSS/CheckoutForm.css';
 
-const PickupForm = ({ onSubmit, onCancel }) => {
+const PickupForm = ({cartData, onSubmit, onCancel }) => {
   const [name, setName] = useState("");
   const [whoIsPickingUp, setWhoIsPickingUp] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [creditCard, setCreditCard] = useState("");
   const [error, setError] = useState(null);
 
+  
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    const email  = localStorage.getItem('email');
     const payload = {
+      cartData,
+      email,
+      action: "add",  
       name,
       whoIsPickingUp,
       phoneNumber,
@@ -20,7 +25,7 @@ const PickupForm = ({ onSubmit, onCancel }) => {
     };
 
     axios
-      .post("http://localhost:8080/backend_war_exploded/checkout/pickup", payload)
+      .post("http://localhost:8080/backend_war_exploded/storedata", payload)
       .then((response) => {
         onSubmit(response.data);
       })
@@ -69,7 +74,7 @@ const PickupForm = ({ onSubmit, onCancel }) => {
   );
 };
 
-const DeliveryForm = ({ onSubmit, onCancel }) => {
+const DeliveryForm = ({cartData, onSubmit, onCancel }) => {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
@@ -82,7 +87,11 @@ const DeliveryForm = ({ onSubmit, onCancel }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const email  = localStorage.getItem('email');
     const payload = {
+      cartData,
+      email,
+      action: "add",
       name,
       address,
       city,
@@ -91,9 +100,9 @@ const DeliveryForm = ({ onSubmit, onCancel }) => {
       creditCard,
       phoneNumber,
     };
-
+    console.log(payload)
     axios
-      .post("http://localhost:8080/backend_war_exploded/checkout/delivery", payload)
+      .post("http://localhost:8080/backend_war_exploded/storedata", payload)
       .then((response) => {
         onSubmit(response.data);
       })
@@ -163,7 +172,7 @@ const DeliveryForm = ({ onSubmit, onCancel }) => {
   );
 };
 
-const CheckoutForm = () => {
+const CheckoutForm = (cartData) => {
   const [deliveryMethod, setDeliveryMethod] = useState("home");
   const [showPickupForm, setShowPickupForm] = useState(false);
   const [showDeliveryForm, setShowDeliveryForm] = useState(true);
@@ -171,6 +180,7 @@ const CheckoutForm = () => {
 
   const handleCheckoutComplete = (data) => {
     setCheckoutData(data);
+    alert('Thanks for your order ')
     // Redirect or show success message
   };
 
@@ -209,18 +219,19 @@ const CheckoutForm = () => {
         </label>
       </div>
       {showPickupForm && (
-        <PickupForm
+        <PickupForm cartData={cartData}
           onSubmit={handleCheckoutComplete}
           onCancel={() => setShowPickupForm(false)}
         />
       )}
       {showDeliveryForm && (
         <DeliveryForm
+         cartData={cartData}
           onSubmit={handleCheckoutComplete}
           onCancel={() => setShowDeliveryForm(false)}
         />
       )}
-      {checkoutData && <p>Checkout successful: {JSON.stringify(checkoutData)}</p>}
+      {/* {checkoutData && <p>Checkout successful: {JSON.stringify(checkoutData)}</p>} */}
     </div>
   );
 };

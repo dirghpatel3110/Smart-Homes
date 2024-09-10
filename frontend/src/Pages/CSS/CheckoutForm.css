@@ -106,20 +106,8 @@ body {
     margin-top: 20px;
 }
   
-  /* Checkout Options Container */
-  .checkout-options {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .checkout-options label {
-    display: inline-block;
-    margin: 0 15px;
-    font-size: 16px;
-  }
-  
-  /* Error Messages */
-  p {
+
+  .popup-form p {
     color: #dc3545;
     font-size: 14px;
     margin-top: 10px;

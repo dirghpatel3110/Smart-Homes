@@ -239,24 +239,24 @@ const ProductDetails = () => {
 
   return (
     <div className="product-detail">
-      <h2>{product.name}</h2>
-      <p>{product.description}</p>
-      <p><strong>Price:</strong> ${product.price} per unit</p>
+      <h2><strong>Name: </strong>{product.name}</h2>
+      <p><strong>Description: </strong>{product.description}</p>
+      <p><strong>Price: </strong> ${product.price} per unit</p>
       <div className="quantity-container">
         <button onClick={() => handleQuantityChange(-1)} disabled={quantity <= 0}>-</button>
         <span>Quantity: {quantity}</span>
         <button onClick={() => handleQuantityChange(1)}>+</button>
       </div>
       <div className="accessories-container">
-        <strong>Accessories:</strong>
+        <strong className='accessories'>Accessories:</strong>
         {product.accessories.length > 0 ? (
           <ul>
             {product.accessories.map((accessory, index) => (
               <li key={index} onClick={() => handleAccessoryClick(accessory)}>
                 <div className="accessory-info">
-                  <strong>{accessory.name || 'Unnamed accessory'}</strong>
-                  <p><strong>Description:</strong> {accessory.description || 'No description'}</p>
-                  <p><strong>Price:</strong> ${accessory.price}</p>
+                  <p><strong>Name: </strong>{accessory.name || 'Unnamed accessory'}</p>
+                  <p><strong>Description: </strong> {accessory.description || 'No description'}</p>
+                  <p><strong>Price: </strong> ${accessory.price}</p>
                   {selectedAccessories.find((a) => a.name === accessory.name) && (
                     <div className="accessory-quantity-container">
                       <button onClick={() => handleAccessoryQuantityChange(accessory, -1)}>-</button>
