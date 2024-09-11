@@ -7,12 +7,19 @@ export default function Order() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showConfirmPop, setShowConfirmPop] = useState(false); 
-  const [showUpdatePop, setShowUpdatePop] = useState(false); 
+  const [showConfirmPop, setShowConfirmPop] = useState(false);
+  const [showUpdatePop, setShowUpdatePop] = useState(false);
   const [orderToRemove, setOrderToRemove] = useState(null);
   const [orderToUpdate, setOrderToUpdate] = useState(null);
   const [newStatus, setNewStatus] = useState("");
   const [role, setRole] = useState(null);
+  const [showCreateAccountPop, setShowCreateAccountPop] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    role: "",
+    password: "",
+  });
 
   useEffect(() => {
     const storedRole = localStorage.getItem("role");
@@ -27,7 +34,9 @@ export default function Order() {
       }
 
       axios
-        .get(`http://localhost:8080/backend_war_exploded/getOrders?email=${email}`)
+        .get(
+          `http://localhost:8080/backend_war_exploded/getOrders?email=${email}`
+        )
         .then((response) => {
           setProducts(response.data);
           setLoading(false);
@@ -60,12 +69,17 @@ export default function Order() {
     axios
       .delete(removeUrl)
       .then((response) => {
-        setProducts(products.filter((product) => product.orderID !== orderToRemove));
-        setShowConfirmPop(false); 
+        setProducts(
+          products.filter((product) => product.orderID !== orderToRemove)
+        );
+        setShowConfirmPop(false);
         setOrderToRemove(null);
       })
       .catch((error) => {
-        console.error("There was an error removing the product:", error.message);
+        console.error(
+          "There was an error removing the product:",
+          error.message
+        );
         setError("Failed to remove product. Please try again.");
         setShowConfirmPop(false);
         setOrderToRemove(null);
@@ -73,7 +87,7 @@ export default function Order() {
   };
 
   const cancelRemove = () => {
-    setShowConfirmPop(false); 
+    setShowConfirmPop(false);
     setOrderToRemove(null);
   };
 
@@ -90,7 +104,7 @@ export default function Order() {
               : product
           )
         );
-        setShowUpdatePop(false); 
+        setShowUpdatePop(false);
         setOrderToUpdate(null);
         setNewStatus("");
       })
@@ -103,13 +117,43 @@ export default function Order() {
   const handleOpenUpdatePop = (orderID, currentStatus) => {
     setOrderToUpdate(orderID);
     setNewStatus(currentStatus);
-    setShowUpdatePop(true); 
+    setShowUpdatePop(true);
   };
 
   const cancelUpdate = () => {
-    setShowUpdatePop(false); 
+    setShowUpdatePop(false);
     setOrderToUpdate(null);
     setNewStatus("");
+  };
+
+  const handleCreateAccount = () => {
+    setShowCreateAccountPop(true);
+  };
+
+  const handleAccountSubmit = () => {
+    const signupUrl = `http://localhost:8080/backend_war_exploded/signup`;
+
+    axios
+      .post(signupUrl, formData)
+      .then((response) => {
+        alert("Account created successfully");
+        setShowCreateAccountPop(false);
+        setFormData({ name: "", email: "", role: "", password: "" });
+      })
+      .catch((error) => {
+        console.error("There was an error creating the account:", error.message);
+        setError("Failed to create account. Please try again.");
+      });
+  };
+
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const cancelCreateAccount = () => {
+    setShowCreateAccountPop(false);
+    setFormData({ name: "", email: "", role: "", password: "" });
   };
 
   if (loading) return <p>Loading...</p>;
@@ -118,6 +162,13 @@ export default function Order() {
   return (
     <>
       <Navbar />
+      {role === "Salesman" ? (
+        <>
+          <div className="Acc">
+            <button onClick={handleCreateAccount}>Create Account</button>
+          </div>
+        </>
+      ) : null}
       <div className="list-product1">
         <div className="listproduct-format-main1">
           <p>Name</p>
@@ -145,7 +196,12 @@ export default function Order() {
                 ) : (
                   <button
                     className="update-order"
-                    onClick={() => handleOpenUpdatePop(product.orderID, product.status || "Pending")}
+                    onClick={() =>
+                      handleOpenUpdatePop(
+                        product.orderID,
+                        product.status || "Pending"
+                      )
+                    }
                   >
                     Update Order
                   </button>
@@ -161,7 +217,10 @@ export default function Order() {
               <p>{product.status || "Pending"}</p>
             ) : (
               <>
-                <button className="remove-button" onClick={() => handleRemove(product.orderID)}>
+                <button
+                  className="remove-button"
+                  onClick={() => handleRemove(product.orderID)}
+                >
                   Remove
                 </button>
               </>
@@ -170,7 +229,7 @@ export default function Order() {
         ))}
       </div>
 
-      {showConfirmPop && ( 
+      {showConfirmPop && (
         <div className="confirmation-pop1">
           <div className="confirmation-pop-content1">
             <p>Are you sure you want to cancel this order?</p>
@@ -184,7 +243,7 @@ export default function Order() {
         </div>
       )}
 
-      {showUpdatePop && ( 
+      {showUpdatePop && (
         <div className="update-pop1">
           <div className="update-pop-content1">
             <p>Update status for order {orderToUpdate}:</p>
@@ -208,7 +267,48 @@ export default function Order() {
           </div>
         </div>
       )}
+
+      {showCreateAccountPop && (
+        <div className="create-account-pop1">
+          <div className="create-account-pop-content1">
+            <h2>Create Account</h2>
+            <input
+              type="text"
+              name="name"
+              placeholder="Name"
+              value={formData.name}
+              onChange={handleFormChange}
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleFormChange}
+            />
+            <input
+              type="text"
+              name="role"
+              placeholder="Role"
+              value={formData.role}
+              onChange={handleFormChange}
+            />
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleFormChange}
+            />
+            <button className="cancel-button" onClick={cancelCreateAccount}>
+              Cancel
+            </button>
+            <button className="confirm-button" onClick={handleAccountSubmit}>
+              Create Account
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
-
