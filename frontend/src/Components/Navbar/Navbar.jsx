@@ -10,22 +10,24 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Retrieve the role from localStorage
     const storedRole = localStorage.getItem('role');
 
-    // Check if the role is being retrieved correctly
     console.log("Stored Role:", storedRole);
 
     if (storedRole) {
       setRole(storedRole);
     }
 
-    // Update the active link based on the current route
     setActiveLink(location.pathname);
   }, [location]);
 
   const handleClick = (link) => {
     setActiveLink(link);
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
   };
 
   return (
@@ -87,7 +89,7 @@ const Navbar = () => {
           </Link>
         </button>): null}
         
-        <button onClick={()=>{localStorage.clear(); navigate("/")}}>Logout</button>
+        <button onClick={handleLogout}>Logout</button>
         <Link to='/cart'>
           <img src={cart_icon} alt="cart_icon" />
         </Link>

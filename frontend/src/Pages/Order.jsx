@@ -17,7 +17,7 @@ export default function Order() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    role: "",
+    role: "Customer",
     password: "",
   });
 
@@ -291,7 +291,6 @@ export default function Order() {
               name="role"
               placeholder="Role"
               value={formData.role}
-              onChange={handleFormChange}
             />
             <input
               type="password"
