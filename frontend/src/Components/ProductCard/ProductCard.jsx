@@ -1,5 +1,3 @@
-// src/Components/ProductCard/ProductCard.jsx
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ProductCard.css';

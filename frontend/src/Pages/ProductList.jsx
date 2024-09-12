@@ -294,7 +294,7 @@ export default function ProductList() {
           <input type="text" placeholder="Accessory Name" name="name" value={newAccessoryForAdd.name} onChange={handleNewAccessoryForAddChange} />
           <input type="text" placeholder="Accessory Price" name="price" value={newAccessoryForAdd.price} onChange={handleNewAccessoryForAddChange} />
           <input type="text" placeholder="Accessory Description" name="description" value={newAccessoryForAdd.description} onChange={handleNewAccessoryForAddChange} />
-          <button type="button" onClick={addAccessoryForAdd}>Add Accessory</button>
+          <button style={{backgroundColor:'#218838'}} type="button" onClick={addAccessoryForAdd}>Add Accessory</button>
 
           <div className="button-container">
             <button type="submit">Add Product</button>
@@ -357,7 +357,7 @@ export default function ProductList() {
             value={newAccessory.name}
             onChange={(e) => setNewAccessory({ ...newAccessory, name: e.target.value })}
           />
-          <input
+          <input  
             type="text"
             placeholder="Accessory Price"
             name="price"
@@ -371,11 +371,11 @@ export default function ProductList() {
             value={newAccessory.description}
             onChange={(e) => setNewAccessory({ ...newAccessory, description: e.target.value })}
           />
-          <button type="button" onClick={addAccessory}>Add Accessory</button>
+          <button style={{backgroundColor:'#218838'}} type="button" onClick={addAccessory}>Add Accessory</button>
 
           <div className="button-container">
-            <button type="submit">Save Changes</button>
-            <button type="button" onClick={closeEditModal} className="cancel-button">Cancel</button>
+            <button style={{backgroundColor:'#218838'}} type="submit">Save Changes</button>
+            <button  type="button" onClick={closeEditModal} className="cancel-button">Cancel</button>
           </div>
         </form>
       </Modal>

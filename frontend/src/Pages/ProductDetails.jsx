@@ -14,7 +14,7 @@ const ProductDetails = () => {
   const [accessoryQuantities, setAccessoryQuantities] = useState({});
   const [totalPrice, setTotalPrice] = useState(product.price);
 
-    
+       
   useEffect(() => {
     if (product) {
       const calculateTotalPrice = () => {
@@ -88,6 +88,7 @@ const ProductDetails = () => {
       productId: product.id,
       name: product.name,
       price: product.price,
+      warranty: product.warranty,
       category: product.category,
       quantity: quantity,
       accessories: selectedAccessories.map((a) => ({ ...a, quantity: accessoryQuantities[a.name] || 1 }))
@@ -113,13 +114,16 @@ const ProductDetails = () => {
       <h2><strong>Name: </strong>{product.name}</h2>
       <p><strong>Description: </strong>{product.description}</p>
       <p><strong>Price: </strong> ${product.price} per unit</p>
+      {product.warranty && (
+                    <p><strong>Warranty:</strong> {product.warranty.available ? `Available for $${product.warranty.price}` : "Not Available"}</p>
+                  )}
       <div className="quantity-container">
         <button onClick={() => handleQuantityChange(-1)} disabled={quantity <= 0}>-</button>
         <span>Quantity: {quantity}</span>
         <button onClick={() => handleQuantityChange(1)}>+</button>
       </div>
       <div className="accessories-container">
-        <strong className='accessories'>Accessories:</strong>
+        <strong className='accessories'>Accessories:</strong><br />
         {product.accessories.length > 0 ? (
           <ul>
             {product.accessories.map((accessory, index) => (
@@ -144,7 +148,7 @@ const ProductDetails = () => {
         )}
       </div>
       <div className="add-to-cart-container">
-        <button className="add-to-cart-button" onClick={handleAddToCart}>Add to Cart</button>
+        <button className="add-to-cart-button1" onClick={handleAddToCart}>Add to Cart</button>&nbsp;
         <p className="total-price">Total: ${totalPrice}</p>
       </div>
     </div>

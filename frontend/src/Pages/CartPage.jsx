@@ -70,13 +70,11 @@ const Cart = () => {
     alert(`Order placed! Confirmation number: ${confirmationData.confirmationNumber}`);
   };
 
-  // Calculate total number of items in the cart
   const totalItems = cartData.reduce(
     (total, product) => total + product.quantity,
     0
   );
 
-  // Calculate the total amount including accessories
   const totalAmount = cartData.reduce((total, product) => {
     const productTotal = product.price * product.quantity;
     const accessoriesTotal = product.accessories
@@ -150,7 +148,6 @@ const Cart = () => {
           ) : (
             <p>Your cart is empty.</p>
           )}
-          {/* Display total amount including accessories */}
           <h3>Total Amount: ${totalAmount.toFixed(2)}</h3>
           <button
             className="checkout"
@@ -165,9 +162,6 @@ const Cart = () => {
 };
 
 export default Cart;
-
-
-
 
 
 

@@ -60,8 +60,13 @@ export default function Order() {
   }, []);
 
   const handleRemove = (orderID) => {
+    const order = products.find((product) => product.orderID === orderID);
+    if (order && order.statusUpdatedBySalesman) {
+      alert("You cannot cancel this order because it has been updated by a Salesman.");
+      return;
+    }
     setOrderToRemove(orderID);
-    setShowConfirmPop(true); // show confirm pop
+    setShowConfirmPop(true);
   };
 
   const confirmRemove = () => {
@@ -76,10 +81,7 @@ export default function Order() {
         setOrderToRemove(null);
       })
       .catch((error) => {
-        console.error(
-          "There was an error removing the product:",
-          error.message
-        );
+        console.error("There was an error removing the product:", error.message);
         setError("Failed to remove product. Please try again.");
         setShowConfirmPop(false);
         setOrderToRemove(null);
@@ -95,12 +97,12 @@ export default function Order() {
     const updateUrl = `http://localhost:8080/backend_war_exploded/updateOrder`;
 
     axios
-      .put(updateUrl, { orderID, status: newStatus })
+      .put(updateUrl, { orderID, status: newStatus, statusUpdatedBySalesman: true })
       .then((response) => {
         setProducts(
           products.map((product) =>
             product.orderID === orderID
-              ? { ...product, status: newStatus }
+              ? { ...product, status: newStatus, statusUpdatedBySalesman: true }
               : product
           )
         );
@@ -162,14 +164,12 @@ export default function Order() {
   return (
     <>
       <Navbar />
-      {role === "Salesman" ? (
-        <>
-          <div className="Acc">
-            <button onClick={handleCreateAccount}>Create Account</button>
-          </div>
-        </>
-      ) : null}
-        <div className="list-product1">
+      {role === "Salesman" && (
+        <div className="Acc">
+          <button onClick={handleCreateAccount}>Create Account</button>
+        </div>
+      )}
+      <div className="list-product1">
         <div className="listproduct-format-main1">
           <p>Name</p>
           <p>Product Name</p>
@@ -181,34 +181,34 @@ export default function Order() {
             </>
           ) : (
             <>
-              <p>Product ID</p>
               <p>Order ID</p>
               <p>Order Status</p>
+              <p>Cancel Order</p>
             </>
           )}
-        </div> 
-         {products.map((product) => (
+        </div>
+        {products.map((product) => (
           <div key={product.orderID} className="listproduct-item">
             <p>{product.name}</p>
             {product.cartData && product.cartData.length > 0 ? (
               <>
                 <p>{product.cartData[0].name}</p>
                 {role === "Customer" ? (
-                  <p>{product.cartData[0].productId}</p>
+                  <p>{product.orderID}</p>
                 ) : (
                   <>
-                  <p>{product.cartData[0].productId}</p>
-                  <button
-                    className="update-order"
-                    onClick={() =>
-                      handleOpenUpdatePop(
-                        product.orderID,
-                        product.status || "Pending"
-                      )
-                    }
-                  >
-                    Update Order
-                  </button>
+                    <p>{product.cartData[0].productId}</p>
+                    <button
+                      className="update-order"
+                      onClick={() =>
+                        handleOpenUpdatePop(
+                          product.orderID,
+                          product.status || "Pending"
+                        )
+                      }
+                    >
+                      Update Order
+                    </button>
                   </>
                 )}
               </>
@@ -220,8 +220,17 @@ export default function Order() {
             )}
             {role === "Customer" ? (
               <>
-               <p>{product.orderID}</p>
-              <p>{product.status || "Pending"}</p>
+                <p>{product.status || "Pending"}</p>
+                {["Placed", "Shipped", "Delivered"].includes(product.status) ? (
+                  <p>No actions available</p>
+                ) : (
+                  <button
+                    className="remove-button"
+                    onClick={() => handleRemove(product.orderID)}
+                  >
+                    Cancel
+                  </button>
+                )}
               </>
             ) : (
               <>
@@ -279,7 +288,7 @@ export default function Order() {
       {showCreateAccountPop && (
         <div className="create-account-pop1">
           <div className="create-account-pop-content1">
-            <h2>Create Account</h2>
+            <p>Create New Account:</p>
             <input
               type="text"
               name="name"
@@ -296,8 +305,8 @@ export default function Order() {
             />
             <input
               type="text"
-              name="role"
-              placeholder="Role"
+              name="Customer"
+              placeholder="Type of role"
               value={formData.role}
             />
             <input
@@ -311,7 +320,7 @@ export default function Order() {
               Cancel
             </button>
             <button className="confirm-button" onClick={handleAccountSubmit}>
-              Create Account
+              Create
             </button>
           </div>
         </div>
@@ -319,3 +328,5 @@ export default function Order() {
     </>
   );
 }
+
+

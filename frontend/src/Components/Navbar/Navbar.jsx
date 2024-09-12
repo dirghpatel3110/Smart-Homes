@@ -77,7 +77,7 @@ const Navbar = () => {
           style={{
             color: activeLink === '/order' ? 'blue' : '#515151',
           }}
-        >
+        >  
           <Link
             to='/order'
             style={{

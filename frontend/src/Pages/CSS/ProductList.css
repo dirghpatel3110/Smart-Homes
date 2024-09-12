@@ -1,11 +1,9 @@
-/* General container styling for the product list */
 .list-product {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
 }
 
-/* Main title styling */
 h1 {
   text-align: center;
   color: #333;
@@ -13,7 +11,6 @@ h1 {
   margin-bottom: 20px;
 }
 
-/* Layout for the product list items */
 .listproduct-format-main {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -22,11 +19,10 @@ h1 {
   background-color: #f9f9f9;
   border-radius: 5px;
   margin-bottom: 10px;
-  padding: 10px; /* Adds padding for better spacing */
+  padding: 10px; 
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Center the text within the product list */
 .list-product p {
   display: flex;
   justify-content: center;
@@ -37,7 +33,6 @@ h1 {
   color: #333;
 }
 
-/* Button container styling */
 .btn {
   display: flex;
   justify-content: flex-end;
@@ -45,7 +40,7 @@ h1 {
 }
 
 .add {
-  width: 100px; /* Wider button for better visibility */
+  width: 100px; 
   padding: 8px;
   background-color: #28a745;
   color: #fff;
@@ -59,13 +54,11 @@ h1 {
   background-color: #218838;
 }
 
-/* Styling for dividing lines between sections */
 .listproduct-allproduct hr {
   margin: 20px 0;
   border: 1px solid #ddd;
 }
 
-/* General button styling */
 button {
   padding: 8px 12px;
   background-color: #007bff;
@@ -77,14 +70,15 @@ button {
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #fff;
+  color: #007bff;
+  border: 1px solid #007bff;
 }
 
 button:focus {
   outline: none;
 }
 
-/* Styling for individual product details */
 .product-details {
   margin-top: 20px;
   padding: 10px;
@@ -92,45 +86,41 @@ button:focus {
   border-radius: 5px;
 }
 
-/* Modal styling */
 .modal, .edit-modal, .confirm-modal {
-  background-color: #fff; /* White background for all modals */
+  background-color: #fff; 
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   width: 90%;
-  max-width: 500px; /* Width limits for modals */
-  margin: auto; /* Center modal horizontally */
+  max-width: 500px; 
+  margin: auto; 
   position: relative;
 }
 
-/* Overlay styling for modals */
 .overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
+  background: rgba(0, 0, 0, 0.5); 
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Ensure the modal is above other content */
+  z-index: 1000; 
 }
 
-/* Modal title styling */
 .edit-modal h2, .modal h2, .confirm-modal h2 {
   font-size: 1.5rem;
   color: #333;
   margin-bottom: 20px;
 }
 
-/* Form and accessory input styling */
 .edit-modal form, .modal form {
   display: flex;
   flex-direction: column;
-  max-height: 70vh; /* Max height for the form */
-  overflow-y: auto; /* Enables vertical scrolling */
+  max-height: 70vh; 
+  overflow-y: auto; 
 }
 
 .edit-modal label, .modal label {
@@ -145,20 +135,19 @@ button:focus {
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 1rem;
-  margin-bottom: 15px; /* Space between fields */
+  margin-bottom: 15px;
 }
 
-/* Button container inside modals */
 .edit-modal .button-container, .modal .button-container {
   display: flex;
   justify-content: flex-end;
-  gap: 10px; /* Space between buttons */
+  gap: 10px; 
   margin-top: 20px;
 }
 
 .edit-modal button, .modal button, .confirm-modal button {
   padding: 10px 15px;
-  background: #007bff;
+  background: #28a745;
   border: none;
   color: #fff;
   border-radius: 5px;
@@ -178,7 +167,6 @@ button:focus {
   background: #c82333;
 }
 
-/* Responsive styling */
 @media (max-width: 768px) {
   .listproduct-format-main {
     grid-template-columns: repeat(3, 1fr);
