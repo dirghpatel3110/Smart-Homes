@@ -9,6 +9,7 @@ const Cart = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  
   useEffect(() => {
     const email = localStorage.getItem("email");
 
@@ -29,15 +30,11 @@ const Cart = () => {
     }
   }, []);
 
-  console.log(cartData)
-
   const handleRemoveProduct = (productId) => {
     const email = localStorage.getItem("email");
-
     const product = cartData.find((product) => product.productId === productId);
 
     if (email && product) {
-      // Prepare the request payload
       const payload = {
         email: email,
         action: "remove",
@@ -47,12 +44,9 @@ const Cart = () => {
         name: product.name,
       };
 
-      console.log(payload);
-
       axios
         .post("http://localhost:8080/backend_war_exploded/cart", payload)
         .then((response) => {
-          // Update state to remove the product from cartData based on productId, name, and category
           setCartData((prevCartData) =>
             prevCartData.filter(
               (item) =>
@@ -73,9 +67,7 @@ const Cart = () => {
   };
 
   const handleCheckoutComplete = (confirmationData) => {
-    // Handle checkout completion, e.g., show confirmation message
     alert(`Order placed! Confirmation number: ${confirmationData.confirmationNumber}`);
-    // Optionally, clear the cart or navigate to another page
   };
 
   // Calculate total number of items in the cart
@@ -83,6 +75,16 @@ const Cart = () => {
     (total, product) => total + product.quantity,
     0
   );
+
+  // Calculate the total amount including accessories
+  const totalAmount = cartData.reduce((total, product) => {
+    const productTotal = product.price * product.quantity;
+    const accessoriesTotal = product.accessories
+      ? product.accessories.reduce((acc, accessory) => acc + accessory.price, 0) * product.quantity
+      : 0;
+
+    return total + productTotal + accessoriesTotal;
+  }, 0);
 
   if (loading) {
     return <div className="loading">Loading cart data...</div>;
@@ -98,63 +100,74 @@ const Cart = () => {
 
   return (
     <>
-    <Navbar/>
-    <div className="container">
-      <div className="cart-container">
-        <h2>Total Items in Cart: {totalItems}</h2>{" "}
-        {/* Display total items here */}
-        {cartData.length > 0 ? (
-          <ul>
-            {cartData.map((product) => (
-              <li key={product.productId} className="cart-item">
-                <h3>Product ID: {product.productId}</h3>
-                <p>
-                  <strong>Name:</strong> {product.name}
-                </p>
-                <p>
-                  <strong>Price:</strong> ${product.price}
-                </p>
-                <p>
-                  <strong>Quantity:</strong> {product.quantity}
-                </p>
-                <p>
-                  <strong>Category:</strong> {product.category}
-                </p>
-                {product.accessories && product.accessories.length > 0 && (
-                  <div className="accessories1">
-                    <h3>Accessories:</h3>
-                    <ul>
-                      {product.accessories.map((accessory, idx) => (
-                        <li key={idx}>
-                          <p>
-                            <strong>Name:</strong> {accessory.name},{" "}
-                          </p>
-                          <p>
-                            <strong>Price:</strong> ${accessory.price}
-                          </p>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                <button
-                  className="remove"
-                  onClick={() => handleRemoveProduct(product.productId)}
-                >
-                  Remove
-                </button>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>Your cart is empty.</p>
-        )}
-        <button className="checkout" 
-          onClick={() => setIsCheckingOut(true)}>PROCEED TO CHECKOUT</button>
+      <Navbar />
+      <div className="container">
+        <div className="cart-container">
+          <h2>Total Items in Cart: {totalItems}</h2>
+          {cartData.length > 0 ? (
+            <ul>
+              {cartData.map((product) => (
+                <li key={product.productId} className="cart-item">
+                  <h3>Product ID: {product.productId}</h3>
+                  <p>
+                    <strong>Name:</strong> {product.name}
+                  </p>
+                  <p>
+                    <strong>Price:</strong> ${product.price}
+                  </p>
+                  <p>
+                    <strong>Quantity:</strong> {product.quantity}
+                  </p>
+                  <p>
+                    <strong>Category:</strong> {product.category}
+                  </p>
+                  {product.accessories && product.accessories.length > 0 && (
+                    <div className="accessories1">
+                      <h3>Accessories:</h3>
+                      <ul>
+                        {product.accessories.map((accessory, idx) => (
+                          <li key={idx}>
+                            <p>
+                              <strong>Name:</strong> {accessory.name},{" "}
+                            </p>
+                            <p>
+                              <strong>Price:</strong> ${accessory.price}
+                            </p>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  <button
+                    className="remove"
+                    onClick={() => handleRemoveProduct(product.productId)}
+                  >
+                    Remove
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>Your cart is empty.</p>
+          )}
+          {/* Display total amount including accessories */}
+          <h3>Total Amount: ${totalAmount.toFixed(2)}</h3>
+          <button
+            className="checkout"
+            onClick={() => setIsCheckingOut(true)}
+          >
+            PROCEED TO CHECKOUT
+          </button>
+        </div>
       </div>
-    </div>
     </>
   );
 };
 
 export default Cart;
+
+
+
+
+
+

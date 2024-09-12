@@ -14,7 +14,7 @@ const ProductDetails = () => {
   const [accessoryQuantities, setAccessoryQuantities] = useState({});
   const [totalPrice, setTotalPrice] = useState(product.price);
 
-
+    
   useEffect(() => {
     if (product) {
       const calculateTotalPrice = () => {

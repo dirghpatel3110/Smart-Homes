@@ -8,19 +8,29 @@ const PickupForm = ({ cartData, onSubmit, onCancel }) => {
   const [whoIsPickingUp, setWhoIsPickingUp] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [creditCard, setCreditCard] = useState("");
+  const [storeLocation, setStoreLocation] = useState("");
+  const [zipCode, setZipCode] = useState("");
   const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const email = localStorage.getItem('email');
+
+    // Calculate the future date for delivery (15 days from now)
+    const deliveryDate = new Date();
+    deliveryDate.setDate(deliveryDate.getDate() + 15);
+    const formattedDate = deliveryDate.toLocaleDateString();
+
     const payload = {
       cartData,
       email,
-      action: "add",  
+      action: "add",
       name,
       whoIsPickingUp,
       phoneNumber,
       creditCard,
+      storeLocation,
+      zipCode
     };
 
     try {
@@ -30,6 +40,7 @@ const PickupForm = ({ cartData, onSubmit, onCancel }) => {
       // Clear cart after successful submission
       await axios.delete(`http://localhost:8080/backend_war_exploded/clearCart?email=${email}`);
       
+      alert(`Order successful. Your order will be ready for pickup in 15 days on ${formattedDate}.`);
       onSubmit("Pickup successful");
     } catch (error) {
       setError("Error during pickup checkout");
@@ -37,7 +48,6 @@ const PickupForm = ({ cartData, onSubmit, onCancel }) => {
   };
 
   return (
-    <>
     <div className="popup-form">
       <form onSubmit={handleSubmit}>
         <h3>Pickup Form</h3>
@@ -69,12 +79,35 @@ const PickupForm = ({ cartData, onSubmit, onCancel }) => {
           onChange={(e) => setCreditCard(e.target.value)}
           required
         />
+        <select 
+          value={storeLocation} 
+          onChange={(e) => setStoreLocation(e.target.value)} 
+          required
+        >
+          <option value="" disabled>Select Store Location</option>
+          <option value="Store 1">Store 1</option>
+          <option value="Store 2">Store 2</option>
+          <option value="Store 3">Store 3</option>
+          <option value="Store 4">Store 4</option>
+          <option value="Store 5">Store 5</option>
+          <option value="Store 6">Store 6</option>
+          <option value="Store 7">Store 7</option>
+          <option value="Store 8">Store 8</option>
+          <option value="Store 9">Store 9</option>
+          <option value="Store 10">Store 10</option>
+        </select>
+        <input
+          type="text"
+          placeholder="ZIP Code"
+          value={zipCode}
+          onChange={(e) => setZipCode(e.target.value)}
+          required
+        />
         <button type="submit">Submit</button>
         {error && <p>{error}</p>}
         <button type="button" onClick={onCancel}>Cancel</button>
       </form>
     </div>
-    </>
   );
 };
 
@@ -91,6 +124,12 @@ const DeliveryForm = ({ cartData, onSubmit, onCancel }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const email = localStorage.getItem('email');
+
+    // Calculate the future date for delivery (15 days from now)
+    const deliveryDate = new Date();
+    deliveryDate.setDate(deliveryDate.getDate() + 15);
+    const formattedDate = deliveryDate.toLocaleDateString();
+
     const payload = {
       cartData,
       email,
@@ -111,6 +150,7 @@ const DeliveryForm = ({ cartData, onSubmit, onCancel }) => {
       // Clear cart after successful submission
       await axios.delete(`http://localhost:8080/backend_war_exploded/clearCart?email=${email}`);
       
+      alert(`Order successful. Your order will be delivered in 15 days on ${formattedDate}.`);
       onSubmit("Delivery successful");
     } catch (error) {
       setError("Error during delivery checkout");
@@ -118,7 +158,6 @@ const DeliveryForm = ({ cartData, onSubmit, onCancel }) => {
   };
 
   return (
-    <>
     <div className="popup-form">
       <form onSubmit={handleSubmit}>
         <h3>Delivery Form</h3>
@@ -176,7 +215,6 @@ const DeliveryForm = ({ cartData, onSubmit, onCancel }) => {
         <button type="button" onClick={onCancel}>Cancel</button>
       </form>
     </div>
-    </>
   );
 };
 

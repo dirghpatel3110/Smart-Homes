@@ -22,7 +22,7 @@ p {
 
 .listproduct-format-main1 {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr); 
   font-weight: bold;
   border-bottom: 2px solid #ddd;
   padding-bottom: 10px;
@@ -36,7 +36,7 @@ p {
 
 .listproduct-item {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr); 
   align-items: center;
   padding: 15px 0;
   border-bottom: 1px solid #eee;
@@ -53,7 +53,7 @@ p {
 
 .update-order,
 .remove-button {
-  margin-left: 85px;
+  margin-left: 60px;
   padding: 10px 15px;
   background-color: #007bff;
   color: white;
@@ -165,7 +165,7 @@ p {
 @media (max-width: 768px) {
   .listproduct-format-main1,
   .listproduct-item {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .listproduct-item {
@@ -186,8 +186,7 @@ p {
   }
 }
 
-
-.Acc{
+.Acc {
   display: flex;
   margin: 30px;
   justify-content: end;
@@ -255,5 +254,14 @@ p {
 .create-account-pop-content1 .cancel-button:hover,
 .create-account-pop-content1 .confirm-button:hover {
   opacity: 0.9;
-}
+} 
 
+
+
+  
+
+
+
+  
+
+  

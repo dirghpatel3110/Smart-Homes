@@ -169,31 +169,35 @@ export default function Order() {
           </div>
         </>
       ) : null}
-      <div className="list-product1">
+        <div className="list-product1">
         <div className="listproduct-format-main1">
           <p>Name</p>
           <p>Product Name</p>
           {role === "Salesman" ? (
             <>
+              <p>Product ID</p>
               <p>Update Order</p>
               <p>Remove</p>
             </>
           ) : (
             <>
-              <p>Price</p>
+              <p>Product ID</p>
+              <p>Order ID</p>
               <p>Order Status</p>
             </>
           )}
-        </div>
-        {products.map((product) => (
+        </div> 
+         {products.map((product) => (
           <div key={product.orderID} className="listproduct-item">
             <p>{product.name}</p>
             {product.cartData && product.cartData.length > 0 ? (
               <>
                 <p>{product.cartData[0].name}</p>
                 {role === "Customer" ? (
-                  <p>${product.cartData[0].price}</p>
+                  <p>{product.cartData[0].productId}</p>
                 ) : (
+                  <>
+                  <p>{product.cartData[0].productId}</p>
                   <button
                     className="update-order"
                     onClick={() =>
@@ -205,6 +209,7 @@ export default function Order() {
                   >
                     Update Order
                   </button>
+                  </>
                 )}
               </>
             ) : (
@@ -214,7 +219,10 @@ export default function Order() {
               </>
             )}
             {role === "Customer" ? (
+              <>
+               <p>{product.orderID}</p>
               <p>{product.status || "Pending"}</p>
+              </>
             ) : (
               <>
                 <button
