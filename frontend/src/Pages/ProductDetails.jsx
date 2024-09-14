@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import './CSS/ProductDetails.css';
-import Navbar from '../Components/Navbar/Navbar';
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import "./CSS/ProductDetails.css";
+import Navbar from "../Components/Navbar/Navbar";
 
 const ProductDetails = () => {
   const location = useLocation();
@@ -13,21 +13,39 @@ const ProductDetails = () => {
   const [selectedAccessories, setSelectedAccessories] = useState([]);
   const [accessoryQuantities, setAccessoryQuantities] = useState({});
   const [totalPrice, setTotalPrice] = useState(product.price);
+  const [isChecked, setIsChecked] = useState(false);
 
-       
+  // Handle checkbox change event
+  const handleCheckboxChange = (event) => {
+    setIsChecked(event.target.checked);
+  };
+
   useEffect(() => {
     if (product) {
       const calculateTotalPrice = () => {
-        const accessoriesTotal = selectedAccessories.reduce((sum, accessory) => {
-          const accessoryQuantity = accessoryQuantities[accessory.name] || 0;
-          return sum + (parseFloat(accessory.price) * accessoryQuantity);
-        }, 0);
-        const total = (product.price * quantity) + accessoriesTotal;
+        // Calculate the total price of selected accessories
+        const accessoriesTotal = selectedAccessories.reduce(
+          (sum, accessory) => {
+            const accessoryQuantity = accessoryQuantities[accessory.name] || 0;
+            return sum + parseFloat(accessory.price) * accessoryQuantity;
+          },
+          0
+        );
+
+        // Calculate the base total price
+        let total = (product.discountedPrice ? product.discountedPrice : product.price) * quantity + accessoriesTotal;
+
+        // Include warranty price if the checkbox is checked
+        if (isChecked && product.warranty) {
+          total += parseFloat(product.warranty.price);
+        }
+
         return parseFloat(total.toFixed(2));
       };
+
       setTotalPrice(calculateTotalPrice());
     }
-  }, [product, quantity, selectedAccessories, accessoryQuantities]);
+  }, [product, quantity, selectedAccessories, accessoryQuantities, isChecked]);
 
   if (!product) {
     return <div>Product details not found.</div>;
@@ -35,7 +53,9 @@ const ProductDetails = () => {
 
   const handleAccessoryClick = (accessory) => {
     setSelectedAccessories((prevAccessories) => {
-      const existingAccessory = prevAccessories.find((a) => a.name === accessory.name);
+      const existingAccessory = prevAccessories.find(
+        (a) => a.name === accessory.name
+      );
       if (!existingAccessory) {
         setAccessoryQuantities((prevQuantities) => ({
           ...prevQuantities,
@@ -76,90 +96,145 @@ const ProductDetails = () => {
   };
 
   const handleAddToCart = async () => {
-    const email = localStorage.getItem('email'); // Fetch email from local storage
+    const email = localStorage.getItem("email"); // Fetch email from local storage
     if (!email) {
-      console.error('User email not found in local storage.');
+      console.error("User email not found in local storage.");
       return;
     }
-    
+
     const cartData = {
       email,
-      action: 'add',
+      action: "add",
       productId: product.id,
       name: product.name,
       price: product.price,
-      warranty: product.warranty,
+      warranty: isChecked ? product.warranty: null,
       category: product.category,
       quantity: quantity,
-      accessories: selectedAccessories.map((a) => ({ ...a, quantity: accessoryQuantities[a.name] || 1 }))
+      accessories: selectedAccessories.map((a) => ({
+        ...a,
+        quantity: accessoryQuantities[a.name] || 1,
+      })),
     };
-    console.log(cartData)
+    console.log(cartData);
 
     try {
-      await axios.post('http://localhost:8080/backend_war_exploded/cart', cartData, {
-        headers: {
-          'Content-Type': 'application/json'
+      await axios.post(
+        "http://localhost:8080/backend_war_exploded/cart",
+        cartData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-      });
-      navigate('/cart');
+      );
+      navigate("/cart");
     } catch (error) {
-      console.error('Error adding product to cart:', error);
+      console.error("Error adding product to cart:", error);
     }
   };
 
   return (
     <>
-    <Navbar/>
-    <div className="product-detail">
-      <h2><strong>Name: </strong>{product.name}</h2>
-      <p><strong>Description: </strong>{product.description}</p>
-      <p><strong>Price: </strong> ${product.price} per unit</p>
-      {product.warranty && (
-                    <p><strong>Warranty:</strong> {product.warranty.available ? `Available for $${product.warranty.price}` : "Not Available"}</p>
-                  )}
-      <div className="quantity-container">
-        <button onClick={() => handleQuantityChange(-1)} disabled={quantity <= 0}>-</button>
-        <span>Quantity: {quantity}</span>
-        <button onClick={() => handleQuantityChange(1)}>+</button>
-      </div>
-      <div className="accessories-container">
-        <strong className='accessories'>Accessories:</strong><br />
-        {product.accessories.length > 0 ? (
-          <ul>
-            {product.accessories.map((accessory, index) => (
-              <li key={index} onClick={() => handleAccessoryClick(accessory)}>
-                <div className="accessory-info">
-                  <p><strong>Name: </strong>{accessory.name || 'Unnamed accessory'}</p>
-                  <p><strong>Description: </strong> {accessory.description || 'No description'}</p>
-                  <p><strong>Price: </strong> ${accessory.price}</p>
-                  {selectedAccessories.find((a) => a.name === accessory.name) && (
-                    <div className="accessory-quantity-container">
-                      <button onClick={() => handleAccessoryQuantityChange(accessory, -1)}>-</button>
-                      <span>Quantity: {accessoryQuantities[accessory.name] || 0}</span>
-                      <button onClick={() => handleAccessoryQuantityChange(accessory, 1)}>+</button>
-                    </div>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          'No accessories'
+      <Navbar />
+      <div className="product-detail">
+        <h2>
+          <strong>Name: </strong>
+          {product.name}
+        </h2>
+        <p>
+          <strong>Description: </strong>
+          {product.description}
+        </p>
+        <p>
+          <strong>Price: </strong> ${product.price} per unit
+        </p>
+        {
+          product.discountedPrice && ( <p>
+            <strong>Discounted Price: </strong> ${product.discountedPrice} per unit
+          </p>)
+        }
+        {product.warranty && (
+          <p>
+            <strong>Warranty:</strong>{" "}
+            {`Available for $${product.warranty.price}`}{" "}
+            <input
+              type="checkbox"
+              checked={isChecked}
+              onChange={handleCheckboxChange}
+            />
+          </p>
         )}
+        <div className="quantity-container">
+          <button
+            onClick={() => handleQuantityChange(-1)}
+            disabled={quantity <= 0}
+          >
+            -
+          </button>
+          <span>Quantity: {quantity}</span>
+          <button onClick={() => handleQuantityChange(1)}>+</button>
+        </div>
+        <div className="accessories-container">
+          <strong className="accessories">Accessories:</strong>
+          <br />
+          {product.accessories.length > 0 ? (
+            <ul>
+              {product.accessories.map((accessory, index) => (
+                <li key={index} onClick={() => handleAccessoryClick(accessory)}>
+                  <div className="accessory-info">
+                    <p>
+                      <strong>Name: </strong>
+                      {accessory.name || "Unnamed accessory"}
+                    </p>
+                    <p>
+                      <strong>Description: </strong>{" "}
+                      {accessory.description || "No description"}
+                    </p>
+                    <p>
+                      <strong>Price: </strong> ${accessory.price}
+                    </p>
+                    {selectedAccessories.find(
+                      (a) => a.name === accessory.name
+                    ) && (
+                      <div className="accessory-quantity-container">
+                        <button
+                          onClick={() =>
+                            handleAccessoryQuantityChange(accessory, -1)
+                          }
+                        >
+                          -
+                        </button>
+                        <span>
+                          Quantity: {accessoryQuantities[accessory.name] || 0}
+                        </span>
+                        <button
+                          onClick={() =>
+                            handleAccessoryQuantityChange(accessory, 1)
+                          }
+                        >
+                          +
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            "No accessories"
+          )}
+        </div>
+        <div className="add-to-cart-container">
+          <button className="add-to-cart-button1" onClick={handleAddToCart}>
+            Add to Cart
+          </button>
+          &nbsp;
+          <p className="total-price">Total: ${totalPrice}</p>
+        </div>
       </div>
-      <div className="add-to-cart-container">
-        <button className="add-to-cart-button1" onClick={handleAddToCart}>Add to Cart</button>&nbsp;
-        <p className="total-price">Total: ${totalPrice}</p>
-      </div>
-    </div>
     </>
   );
 };
 
 export default ProductDetails;
-
-
-
-
-
-

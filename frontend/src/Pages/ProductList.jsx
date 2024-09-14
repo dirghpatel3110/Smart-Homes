@@ -71,8 +71,6 @@ export default function ProductList() {
     setNewAccessoryForAdd({ name: '', price: '', description: '' }); 
   };
 
-  /////////////////////////////////////////////////////////////////////////
-
   useEffect(() => {
     axios.get('http://localhost:8080/backend_war_exploded/products')
       .then(response => {
@@ -254,7 +252,7 @@ export default function ProductList() {
             <p><strong>Price:</strong> ${selectedProduct.price}</p>
             <p><strong>Description:</strong> {selectedProduct.description}</p>
             <p><strong>Category:</strong> {selectedProduct.category}</p>
-            <p><strong>Warranty:</strong> {selectedProduct.warranty}</p>
+            <p><strong>Warranty:</strong> {selectedProduct.warranty.price}</p>
             <h3>Accessories:</h3>
             {selectedProduct.accessories.map((accessory, index) => (
               <div key={index}>
@@ -319,9 +317,10 @@ export default function ProductList() {
           <input type="text" name="description" value={editedProduct.description} onChange={handleInputChange} />
           <label>Category</label>
           <input type="text" name="category" value={editedProduct.category} onChange={handleInputChange} />
+          <div className="waT">
           <label>Warranty</label>
           <input type="text" name="warranty" value={editedProduct.warranty} />
-
+          </div>
           <h3>Edit Accessories:</h3>
           {editedProduct.accessories.map((accessory, index) => (
             <div key={index}>

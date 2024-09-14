@@ -39,6 +39,9 @@ h1 {
   margin-bottom: 20px;
 }
 
+.waT{
+  display: none;
+}
 .add {
   width: 100px; 
   padding: 8px;

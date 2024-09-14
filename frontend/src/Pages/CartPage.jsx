@@ -71,18 +71,24 @@ const Cart = () => {
   };
 
   const totalItems = cartData.reduce(
-    (total, product) => total + product.quantity,
+    (total, product) => total + product.quantity + (product.accessories ? product.accessories.length : 0),
     0
   );
-
+  
   const totalAmount = cartData.reduce((total, product) => {
-    const productTotal = product.price * product.quantity;
+    const productTotal = product.quantity > 0 ? product.price * product.quantity : 0;
+  
     const accessoriesTotal = product.accessories
-      ? product.accessories.reduce((acc, accessory) => acc + accessory.price, 0) * product.quantity
+      ? product.accessories.reduce(
+          (acc, accessory) => acc + accessory.price * (product.quantity > 0 ? product.quantity : 1), // Handle accessory pricing if product quantity is 0
+          0
+        )
       : 0;
+    const warrantyTotal = product.warranty ? (product.warranty.price) : 0;
+    return total + productTotal + accessoriesTotal + warrantyTotal;
 
-    return total + productTotal + accessoriesTotal;
   }, 0);
+  
 
   if (loading) {
     return <div className="loading">Loading cart data...</div>;
@@ -119,6 +125,9 @@ const Cart = () => {
                   <p>
                     <strong>Category:</strong> {product.category}
                   </p>
+                  {
+                    product.warranty && <p> <strong>Warranty :</strong> {product.warranty.price}</p>
+                  }
                   {product.accessories && product.accessories.length > 0 && (
                     <div className="accessories1">
                       <h3>Accessories:</h3>
