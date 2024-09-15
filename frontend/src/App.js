@@ -15,13 +15,13 @@ function App() {
     <div>
       <BrowserRouter>
       <Routes>
-      <Route path="/" element={<Login/>} />
-      <Route path="/signup" element={<Signup/>} />
-      <Route path='/product' element={<Product/>}/>
-      <Route path="/product/:id" element={<ProductDetails />} />
-      <Route path='/product-list' element={<ProductList/>}/>
-      <Route path="/cart" element={<CartPage/>} />
-      <Route path="/order" element={<Order/>}/>
+      <Route exact path="/" element={<Login/>} />
+      <Route exact path="/signup" element={<Signup/>} />
+      <Route exact path='/product' element={<Product/>}/>
+      <Route exact path="/product/:id" element={<ProductDetails />} />
+      <Route exact path='/product-list' element={<ProductList/>}/>
+      <Route exact path="/cart" element={<CartPage/>} />
+      <Route exact path="/order" element={<Order/>}/>
       </Routes>
       </BrowserRouter>
     </div>
