@@ -3,14 +3,15 @@
 This project is a web application for an online retailer, SmartHomes, allowing customers to browse products, create accounts, and place orders either for in-store pickup or home delivery. The project consists of a React frontend, a backend built using Java servlets and JSP, with data stored in JSON files.
 
 **Technologies Used**
-Server Side: Java Servlets
-Frontend: React.js, Axios
-Backend Server: Apache Tomcat 9.0.94
-Data Storage: JSON files (products.json, cart.json, users.json, data.json)
-IDE: IntelliJ IDEA (Server), Visual Studio Code (Client)
-Build Tools: Maven (Server), npm/Webpack (Client)
-Other Libraries: Axios (for HTTP requests)
-
+Server Side: Java Servlets<br>
+Frontend: React.js, Axios<br>
+Backend Server: Apache Tomcat 9.0.94<br>
+Data Storage: JSON files (products.json, cart.json, users.json, data.json)<br>
+IDE: IntelliJ IDEA (Server), Visual Studio Code (Client)<br>
+Build Tools: Maven (Server), npm/Webpack (Client)<br>
+Other Libraries: Axios (for HTTP requests)<br>
+<br>
+<br>
 **Features**
 Product Management: StoreManager can add, delete, and update products.
 User Accounts: Salesmen can create customer accounts, and customers can register online.
