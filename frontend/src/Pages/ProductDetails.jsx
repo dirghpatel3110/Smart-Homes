@@ -15,7 +15,6 @@ const ProductDetails = () => {
   const [totalPrice, setTotalPrice] = useState(product.price);
   const [isChecked, setIsChecked] = useState(false);
 
-  // Handle checkbox change event
   const handleCheckboxChange = (event) => {
     setIsChecked(event.target.checked);
   };
@@ -23,7 +22,6 @@ const ProductDetails = () => {
   useEffect(() => {
     if (product) {
       const calculateTotalPrice = () => {
-        // Calculate the total price of selected accessories
         const accessoriesTotal = selectedAccessories.reduce(
           (sum, accessory) => {
             const accessoryQuantity = accessoryQuantities[accessory.name] || 0;
@@ -32,10 +30,8 @@ const ProductDetails = () => {
           0
         );
 
-        // Calculate the base total price
         let total = (product.discountedPrice ? product.discountedPrice : product.price) * quantity + accessoriesTotal;
 
-        // Include warranty price if the checkbox is checked
         if (isChecked && product.warranty) {
           total += parseFloat(product.warranty.price);
         }
@@ -96,7 +92,7 @@ const ProductDetails = () => {
   };
 
   const handleAddToCart = async () => {
-    const email = localStorage.getItem("email"); // Fetch email from local storage
+    const email = localStorage.getItem("email"); 
     if (!email) {
       console.error("User email not found in local storage.");
       return;
@@ -116,7 +112,6 @@ const ProductDetails = () => {
         quantity: accessoryQuantities[a.name] || 1,
       })),
     };
-    console.log(cartData);
 
     try {
       await axios.post(

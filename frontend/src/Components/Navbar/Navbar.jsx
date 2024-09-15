@@ -12,8 +12,6 @@ const Navbar = () => {
   useEffect(() => {
     const storedRole = localStorage.getItem('role');
 
-    console.log("Stored Role:", storedRole);
-
     if (storedRole) {
       setRole(storedRole);
     }
@@ -88,7 +86,6 @@ const Navbar = () => {
             Order
           </Link>
         </button>): null}
-        
         <button onClick={handleLogout}>Logout</button>
         <Link to='/cart'>
           <img src={cart_icon} alt="cart_icon" />

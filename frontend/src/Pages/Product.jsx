@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import ProductCard from '../Components/ProductCard/ProductCard'; // Ensure the path is correct
+import ProductCard from '../Components/ProductCard/ProductCard'; 
 import Navbar from '../Components/Navbar/Navbar';
 
 const Product = () => {

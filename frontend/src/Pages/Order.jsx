@@ -61,10 +61,6 @@ export default function Order() {
 
   const handleRemove = (orderID) => {
     const order = products.find((product) => product.orderID === orderID);
-    if (order && order.statusUpdatedBySalesman) {
-      alert("You cannot cancel this order because it has been updated by a Salesman.");
-      return;
-    }
     setOrderToRemove(orderID);
     setShowConfirmPop(true);
   };
@@ -170,34 +166,32 @@ export default function Order() {
         </div>
       )}
       <div className="list-product1">
-        <div className="listproduct-format-main1">
-          <p>Name</p>
-          <p>Product Name</p>
-          {role === "Salesman" ? (
-            <>
-              <p>Product ID</p>
-              <p>Update Order</p>
-              <p>Remove</p>
-            </>
-          ) : (
-            <>
-              <p>Order ID</p>
-              <p>Order Status</p>
-              <p>Cancel Order</p>
-            </>
-          )}
-        </div>
-        {products.map((product) => (
-          <div key={product.orderID} className="listproduct-item">
-            <p>{product.name}</p>
-            {/* <p>{product.orderID}</p>             */}
-            {product.cartData.map((item)=> (
-              <>
-                <p>{item.name}</p>
-                {role !== "Customer" && (
-                  <>
-                    <p>{item.productId}</p>
-                    <button
+  <div className="listproduct-format-main1">
+    <p>Name</p>
+    <p>Order ID</p> 
+    <p>Product Name</p>
+    {role === "Salesman" ? (
+      <>
+        <p>Update Order</p>
+        <p>Remove</p>
+      </>
+    ) : (
+      <>
+        <p>Order Status</p>
+        <p>Cancel Order</p>
+      </>
+    )}
+  </div>
+  {products.map((product) => (
+    <div key={product.orderID} className="listproduct-item">
+      <p>{product.name}</p>
+      <p>{product.orderID}</p>
+      <ul>
+      {product.cartData.map((item) => (
+          <li>{item.name}</li>      
+      ))}
+      </ul>
+      {role==="Salesman" ? <button
                       className="update-order"
                       onClick={() =>
                         handleOpenUpdatePop(
@@ -207,38 +201,35 @@ export default function Order() {
                       }
                     >
                       Update Order
-                    </button>
-                  </>
-                )}
-              </>
-            ))}
-            {role === "Customer" ? (
-              <>
-                <p>{product.status || "Pending"}</p>
-                {["Placed", "Shipped", "Delivered"].includes(product.status) ? (
-                  <p>No actions available</p>
-                ) : (
-                  <button
-                    className="remove-button"
-                    onClick={() => handleRemove(product.orderID)}
-                  >
-                    Cancel
-                  </button>
-                )}
-              </>
-            ) : (
-              <>
-                <button
-                  className="remove-button"
-                  onClick={() => handleRemove(product.orderID)}
-                >
-                  Remove
-                </button>
-              </>
-            )}
-          </div>
-        ))}
-      </div>
+                    </button>: null}
+      {role === "Customer" ? (
+        <>
+          <p>{product.status || "Pending"}</p>
+          {["Placed", "Shipped", "Delivered"].includes(product.status) ? (
+            <p>No actions available</p>
+          ) : (
+            <button
+              className="remove-button"
+              onClick={() => handleRemove(product.orderID)}
+            >
+              Cancel
+            </button>
+          )}
+        </>
+      ) : (
+        <>
+          <button
+            className="remove-button"
+            onClick={() => handleRemove(product.orderID)}
+          >
+            Remove
+          </button>
+        </>
+      )}
+    </div>
+  ))}
+</div>
+
 
       {showConfirmPop && (
         <div className="confirmation-pop1">

@@ -163,7 +163,7 @@ export default function ProductList() {
 
     const productToUpdate = {
       ...editedProduct,
-      id: String(editedProduct.id) // Ensure id is a string
+      id: String(editedProduct.id)
     };
 
     axios.put('http://localhost:8080/backend_war_exploded/products', productToUpdate)
@@ -287,7 +287,6 @@ export default function ProductList() {
           <label>Warranty</label>
           <input type="text" name="warranty" value={newProduct.warranty} onChange={handleNewProductInputChange} />
 
-          {/* Accessory Inputs */}
           <h3>Add Accessories:</h3>
           <input type="text" placeholder="Accessory Name" name="name" value={newAccessoryForAdd.name} onChange={handleNewAccessoryForAddChange} />
           <input type="text" placeholder="Accessory Price" name="price" value={newAccessoryForAdd.price} onChange={handleNewAccessoryForAddChange} />

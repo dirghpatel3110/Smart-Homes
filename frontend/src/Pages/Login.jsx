@@ -1,7 +1,6 @@
-// src/components/Login.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
-import './CSS/Login.css'; // Importing the CSS file
+import './CSS/Login.css'; 
 
 const Login = () => {
   const [role, setRole] = useState("Customer");
@@ -20,7 +19,6 @@ const Login = () => {
 
   const login = async () => {
     formData.role = role;
-    console.log("Login Function Executed", formData);
 
     try {
       const response = await axios.post('http://localhost:8080/backend_war_exploded/login', formData, {
@@ -70,8 +68,10 @@ const Login = () => {
         <input className='login-input' name='email' value={formData.email} onChange={changeHandler} type="email" placeholder='Email Address' autoComplete="off" />
         <input className='login-input' name='password' value={formData.password} onChange={changeHandler} type="password" placeholder='Password' />
       </div>
-      <button className='login-button' onClick={()=>login()}>Continue</button>
-      <p className='login-signup-redirect'>Create an account? <a href="/signup" className='login-link'>Click here</a></p>
+      <button className='login-button' onClick={()=>login()}>Continue</button>{
+        role === "Customer" ?
+      <p className='login-signup-redirect'>Create an account? <a href="/signup" className='login-link'>Click here</a></p>: null
+      }
     </div>
   );
 };

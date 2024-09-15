@@ -15,8 +15,6 @@ const PickupForm = ({ cartData, onSubmit, onCancel }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const email = localStorage.getItem('email');
-
-    // Calculate the future date for delivery (15 days from now)
     const deliveryDate = new Date();
     deliveryDate.setDate(deliveryDate.getDate() + 15);
     const formattedDate = deliveryDate.toLocaleDateString();
@@ -34,10 +32,8 @@ const PickupForm = ({ cartData, onSubmit, onCancel }) => {
     };
 
     try {
-      // Submit form data
       await axios.post("http://localhost:8080/backend_war_exploded/storedata", payload);
-      
-      // Clear cart after successful submission
+
       await axios.delete(`http://localhost:8080/backend_war_exploded/clearCart?email=${email}`);
       
       alert(`Order successful. Your order will be ready for pickup in 15 days on ${formattedDate}.`);
@@ -124,8 +120,6 @@ const DeliveryForm = ({ cartData, onSubmit, onCancel }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const email = localStorage.getItem('email');
-
-    // Calculate the future date for delivery (15 days from now)
     const deliveryDate = new Date();
     deliveryDate.setDate(deliveryDate.getDate() + 15);
     const formattedDate = deliveryDate.toLocaleDateString();
@@ -144,10 +138,8 @@ const DeliveryForm = ({ cartData, onSubmit, onCancel }) => {
     };
 
     try {
-      // Submit form data
       await axios.post("http://localhost:8080/backend_war_exploded/storedata", payload);
       
-      // Clear cart after successful submission
       await axios.delete(`http://localhost:8080/backend_war_exploded/clearCart?email=${email}`);
       
       alert(`Order successful. Your order will be delivered in 15 days on ${formattedDate}.`);
@@ -227,7 +219,6 @@ const CheckoutForm = ({ cartData }) => {
   const handleCheckoutComplete = (data) => {
     setCheckoutData(data);
     alert('Thanks for your order');
-    // Redirect or show success message
   };
 
   const handleDeliveryChange = (e) => {

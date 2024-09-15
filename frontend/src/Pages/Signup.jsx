@@ -1,7 +1,6 @@
-// src/components/Signup.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
-import './CSS/Signup.css'; // Importing the CSS file
+import './CSS/Signup.css';
 import { Link } from 'react-router-dom';
 
 const Signup = () => {
@@ -17,7 +16,6 @@ const Signup = () => {
 
   const signup = async () => {
     formData.role = 'Customer';
-    console.log("Sign Up Function Executed", formData);
     
     try {
       const response = await axios.post('http://localhost:8080/backend_war_exploded/signup', 
@@ -39,7 +37,7 @@ const Signup = () => {
       alert('Sign-up failed. Please try again.');
     }
   };
-
+   
   return (
     <div className='signup-container'>
       <h1 className='signup-title'>Sign Up</h1>
