@@ -42,6 +42,6 @@ Run npm install to install all dependencies.<br>
 Run npm start to start the client-side React application.<br>
 The app should now be running at http://localhost:3000.<br>
 
-<br>
+<hr>
 
 This includes the steps for both the server and client-side setup, as well as the technologies and project structure. Let me know if you'd like any further adjustments!
