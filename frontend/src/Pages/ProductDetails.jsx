@@ -12,12 +12,7 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState(0);
   const [selectedAccessories, setSelectedAccessories] = useState([]);
   const [accessoryQuantities, setAccessoryQuantities] = useState({});
-  const [totalPrice, setTotalPrice] = useState(product.price);
-  const [isChecked, setIsChecked] = useState(false);
-
-  const handleCheckboxChange = (event) => {
-    setIsChecked(event.target.checked);
-  };
+  const [totalPrice, setTotalPrice] = useState(product?.price || 0);
 
   useEffect(() => {
     if (product) {
@@ -30,18 +25,17 @@ const ProductDetails = () => {
           0
         );
 
-        let total = (product.discountedPrice ? product.discountedPrice : product.price) * quantity + accessoriesTotal;
-
-        if (isChecked && product.warranty) {
-          total += parseFloat(product.warranty.price);
-        }
+        let total = product.price * quantity + accessoriesTotal;
+        total -= product.retailer_special_discounts || 0;
+        total -= product.manufacturer_rebate || 0;
+        total += product.warranty_price || 0;
 
         return parseFloat(total.toFixed(2));
       };
 
       setTotalPrice(calculateTotalPrice());
     }
-  }, [product, quantity, selectedAccessories, accessoryQuantities, isChecked]);
+  }, [product, quantity, selectedAccessories, accessoryQuantities]);
 
   if (!product) {
     return <div>Product details not found.</div>;
@@ -66,10 +60,7 @@ const ProductDetails = () => {
   const handleQuantityChange = (delta) => {
     setQuantity((prevQuantity) => {
       const newQuantity = prevQuantity + delta;
-      if (newQuantity >= 0) {
-        return newQuantity;
-      }
-      return prevQuantity;
+      return newQuantity >= 0 ? newQuantity : prevQuantity;
     });
   };
 
@@ -92,7 +83,7 @@ const ProductDetails = () => {
   };
 
   const handleAddToCart = async () => {
-    const email = localStorage.getItem("email"); 
+    const email = localStorage.getItem("email");
     if (!email) {
       console.error("User email not found in local storage.");
       return;
@@ -104,7 +95,6 @@ const ProductDetails = () => {
       productId: product.id,
       name: product.name,
       price: product.price,
-      warranty: isChecked ? product.warranty: null,
       category: product.category,
       quantity: quantity,
       accessories: selectedAccessories.map((a) => ({
@@ -142,24 +132,20 @@ const ProductDetails = () => {
           {product.description}
         </p>
         <p>
-          <strong>Price: </strong> ${product.price} per unit
+          <strong>Price: </strong> ${product.price}
         </p>
-        {
-          product.discountedPrice && ( <p>
-            <strong>Discounted Price: </strong> ${product.discountedPrice} per unit
-          </p>)
-        }
-        {product.warranty && (
-          <p>
-            <strong>Warranty:</strong>{" "}
-            {`Available for $${product.warranty.price}`}{" "}
-            <input
-              type="checkbox"
-              checked={isChecked}
-              onChange={handleCheckboxChange}
-            />
-          </p>
-        )}
+        <p>
+          <strong>Retailer Special Discounts: </strong> ${product.retailer_special_discounts || 0}
+        </p>
+        <p>
+          <strong>Manufacturer Rebate: </strong> ${product.manufacturer_rebate || 0}
+        </p>
+        <p>
+          <strong>Warranty Price: </strong> ${product.warranty_price || 0}
+        </p>
+        <p>
+          <strong>Category: </strong> {product.category}
+        </p>
         <div className="quantity-container">
           <button
             onClick={() => handleQuantityChange(-1)}
@@ -173,7 +159,7 @@ const ProductDetails = () => {
         <div className="accessories-container">
           <strong className="accessories">Accessories:</strong>
           <br />
-          {product.accessories.length > 0 ? (
+          {product.accessories && product.accessories.length > 0 ? (
             <ul>
               {product.accessories.map((accessory, index) => (
                 <li key={index} onClick={() => handleAccessoryClick(accessory)}>

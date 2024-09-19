@@ -2,9 +2,10 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ProductCard.css';
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, onClick }) => {
   const navigate = useNavigate();
   const handleClick = () => {
+    onClick(product);
     navigate(`/product/${product.id}`, { state: { product } });
   };
 
@@ -14,6 +15,7 @@ const ProductCard = ({ product }) => {
         <h3>{product.name}</h3>
         <p>{product.description}</p>
         <p>Price: ${product.price}</p>
+        <p>Category: {product.category}</p>
       </div>
     </div>
   );

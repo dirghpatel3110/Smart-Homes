@@ -4,9 +4,7 @@ import ProductCard from '../Components/ProductCard/ProductCard';
 import Navbar from '../Components/Navbar/Navbar';
 
 const Product = () => {
-  
-  const [products, setProducts] = useState({});
-  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -15,68 +13,76 @@ const Product = () => {
     axios.get('http://localhost:8080/backend_war_exploded/products')
       .then((response) => {
         setProducts(response.data);
-        setCategories(Object.keys(response.data));
-        setFilteredProducts(flattenProducts(response.data));
+        const uniqueCategories = [...new Set(response.data.map(product => product.category))];
+        setCategories(uniqueCategories);
       })
       .catch((error) => {
         console.error('Error fetching products:', error);
       });
   }, []);
 
-  const flattenProducts = (products) => {
-    return Object.values(products).flat();
-  };
-
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
-
-    if (category === 'All') {
-      setFilteredProducts(flattenProducts(products));
-    } else {
-      setFilteredProducts(products[category]);
-    }
   };
 
   const handleProductClick = (product) => {
     setSelectedProduct(product);
   };
 
+  const filteredProducts = selectedCategory === 'All' 
+    ? products 
+    : products.filter(product => product.category === selectedCategory);
+
   return (
     <>
-    <Navbar/>
-    <div>
-      <div className="category-filter">
-        <label htmlFor="category">Filter by category:</label>
-        <select
-          id="category"
-          value={selectedCategory}
-          onChange={(e) => handleCategoryChange(e.target.value)}
-        >
-          <option value="All">All</option>
-          {categories.map((category) => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="product-grid">
-        {filteredProducts.map((product) => (
-          <ProductCard key={product.id} product={product} onClick={handleProductClick} />
-        ))}
-      </div>
-      {selectedProduct && (
-        <div className="product-detail">
-          <h2>{selectedProduct.name}</h2>
-          <p>{selectedProduct.description}</p>
-          <p><strong>Price:</strong> ${selectedProduct.price}</p>
-          <p><strong>Warranty:</strong> {selectedProduct.warranty ? `Price: $${selectedProduct.warranty.price}, Available: ${selectedProduct.warranty.available}` : 'No warranty'}</p>
-          <p><strong>Accessories:</strong> {selectedProduct.accessories ? selectedProduct.accessories.join(', ') : 'No accessories'}</p>
-          <button>Add to Cart</button>
-          <p>Total: ${selectedProduct.price}</p>
+      <Navbar/>
+      <div>
+        <div className="category-filter">
+          <label htmlFor="category">Filter by category:</label>
+          <select
+            id="category"
+            value={selectedCategory}
+            onChange={(e) => handleCategoryChange(e.target.value)}
+          >
+            <option value="All">All</option>
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
         </div>
-      )}
-    </div>
+        <div className="product-grid">
+          {filteredProducts.map((product) => (
+            <ProductCard key={product.id} product={product} onClick={() => handleProductClick(product)} />
+          ))}
+        </div>
+        {selectedProduct && (
+          <div className="product-detail">
+            <h2>{selectedProduct.name}</h2>
+            <p>{selectedProduct.description}</p>
+            <p><strong>Price:</strong> ${selectedProduct.price}</p>
+            <p><strong>Retailer Special Discounts:</strong> ${selectedProduct.retailer_special_discounts}</p>
+            <p><strong>Manufacturer Rebate:</strong> ${selectedProduct.manufacturer_rebate}</p>
+            <p><strong>Warranty Price:</strong> ${selectedProduct.warranty_price}</p>
+            <p><strong>Category:</strong> {selectedProduct.category}</p>
+            <h3>Accessories:</h3>
+            {selectedProduct.accessories && selectedProduct.accessories.length > 0 ? (
+              <ul>
+                {selectedProduct.accessories.map((accessory, index) => (
+                  <li key={index}>
+                    {accessory.name} - ${accessory.price}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No accessories available</p>
+            )}
+            <button>Add to Cart</button>
+            <p>Total: ${selectedProduct.price}</p>
+          </div>
+        )}
+      </div>
     </>
   );
 };
