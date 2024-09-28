@@ -40,13 +40,14 @@ const TradingButton = ({ onFetch }) => {
   return (
     <div>
       {/* Trading Button to fetch most liked products */}
-      <button onClick={fetchData}>Trading</button>
+      <div className='category-filter1'>
       <select value={selectedOption} onChange={(e) => setSelectedOption(e.target.value)}>
         <option value="Top Likes">Top Likes</option>
         <option value="Top Zip Codes">Top Zip Codes</option>
         <option value="Top Sold Products">Top Sold Products</option>
       </select>
-
+      <button className='trading' onClick={fetchData}>Trading</button>
+      </div>
       {/* Display loading state */}
       {loading && <p>Loading...</p>}
 
