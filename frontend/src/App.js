@@ -7,7 +7,7 @@ import ProductList from './Pages/ProductList';
 import ProductDetails from './Pages/ProductDetails';
 import CartPage from './Pages/CartPage';
 import Order from './Pages/Order';
-
+import TrendingPage from './Pages/TrendingPage';
 
 
 function App() {
@@ -22,6 +22,7 @@ function App() {
       <Route exact path='/product-list' element={<ProductList/>}/>
       <Route exact path="/cart" element={<CartPage/>} />
       <Route exact path="/order" element={<Order/>}/>
+      <Route path="/trending" element={<TrendingPage/>} />
       </Routes>
       </BrowserRouter>
     </div>
