@@ -19,6 +19,12 @@ export default function Order() {
     email: "",
     role: "Customer",
     password: "",
+    street: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    userAge: "",
+    userGender: "",
   });
 
   useEffect(() => {
@@ -26,17 +32,15 @@ export default function Order() {
     setRole(storedRole);
 
     if (storedRole === "Customer") {
-      const email = localStorage.getItem("email");
-      if (!email) {
+      const userId = localStorage.getItem("id");
+      if (!userId) {
         setError("User not logged in.");
         setLoading(false);
         return;
       }
 
       axios
-        .get(
-          `http://localhost:8080/backend_war_exploded/getOrders?email=${email}`
-        )
+        .get(`http://localhost:8080/myservlet/getTransactions?userId=${userId}`)
         .then((response) => {
           setProducts(response.data);
           setLoading(false);
@@ -47,7 +51,7 @@ export default function Order() {
         });
     } else if (storedRole === "Salesman") {
       axios
-        .get("http://localhost:8080/backend_war_exploded/getOrders")
+        .get("http://localhost:8080/myservlet/getTransactions")
         .then((response) => {
           setProducts(response.data);
           setLoading(false);
@@ -60,24 +64,27 @@ export default function Order() {
   }, []);
 
   const handleRemove = (orderID) => {
-    const order = products.find((product) => product.orderID === orderID);
+    const order = products.find((product) => product.orderId === orderID);
     setOrderToRemove(orderID);
     setShowConfirmPop(true);
   };
 
   const confirmRemove = () => {
-    const removeUrl = `http://localhost:8080/backend_war_exploded/deleteOrder?orderID=${orderToRemove}`;
+    const removeUrl = `http://localhost:8080/myservlet/deleteOrder?orderID=${orderToRemove}`;
     axios
       .delete(removeUrl)
       .then((response) => {
         setProducts(
-          products.filter((product) => product.orderID !== orderToRemove)
+          products.filter((product) => product.orderId !== orderToRemove)
         );
         setShowConfirmPop(false);
         setOrderToRemove(null);
       })
       .catch((error) => {
-        console.error("There was an error removing the product:", error.message);
+        console.error(
+          "There was an error removing the product:",
+          error.message
+        );
         setError("Failed to remove product. Please try again.");
         setShowConfirmPop(false);
         setOrderToRemove(null);
@@ -90,14 +97,18 @@ export default function Order() {
   };
 
   const handleUpdate = (orderID, newStatus) => {
-    const updateUrl = `http://localhost:8080/backend_war_exploded/updateOrder`;
+    const updateUrl = `http://localhost:8080/myservlet/updateOrder`;
 
     axios
-      .put(updateUrl, { orderID, status: newStatus, statusUpdatedBySalesman: true })
+      .put(updateUrl, {
+        orderID,
+        status: newStatus,
+        statusUpdatedBySalesman: true,
+      })
       .then((response) => {
         setProducts(
           products.map((product) =>
-            product.orderID === orderID
+            product.orderId === orderID
               ? { ...product, status: newStatus, statusUpdatedBySalesman: true }
               : product
           )
@@ -112,8 +123,8 @@ export default function Order() {
       });
   };
 
-  const handleOpenUpdatePop = (orderID, currentStatus) => {
-    setOrderToUpdate(orderID);
+  const handleOpenUpdatePop = (orderId, currentStatus) => {
+    setOrderToUpdate(orderId);
     setNewStatus(currentStatus);
     setShowUpdatePop(true);
   };
@@ -129,17 +140,31 @@ export default function Order() {
   };
 
   const handleAccountSubmit = () => {
-    const signupUrl = `http://localhost:8080/backend_war_exploded/signup`;
+    const signupUrl = `http://localhost:8080/myservlet/signup`;
 
     axios
       .post(signupUrl, formData)
       .then((response) => {
         alert("Account created successfully");
         setShowCreateAccountPop(false);
-        setFormData({ name: "", email: "", role: "", password: "" });
+        setFormData({
+          name: "",
+          email: "",
+          role: "",
+          password: "",
+          street: "",
+          city: "",
+          state: "",
+          zipCode: "",
+          userAge: "",
+          userGender: "",
+        });
       })
       .catch((error) => {
-        console.error("There was an error creating the account:", error.message);
+        console.error(
+          "There was an error creating the account:",
+          error.message
+        );
         setError("Failed to create account. Please try again.");
       });
   };
@@ -166,70 +191,69 @@ export default function Order() {
         </div>
       )}
       <div className="list-product1">
-  <div className="listproduct-format-main1">
-    <p>Name</p>
-    <p>Order ID</p> 
-    <p>Product Name</p>
-    {role === "Salesman" ? (
-      <>
-        <p>Update Order</p>
-        <p>Remove</p>
-      </>
-    ) : (
-      <>
-        <p>Order Status</p>
-        <p>Cancel Order</p>
-      </>
-    )}
-  </div>
-  {products.map((product) => (
-    <div key={product.orderID} className="listproduct-item">
-      <p>{product.name}</p>
-      <p>{product.orderID}</p>
-      <ul>
-      {product.cartData.map((item) => (
-          <li>{item.name}</li>      
-      ))}
-      </ul>
-      {role==="Salesman" ? <button
-                      className="update-order"
-                      onClick={() =>
-                        handleOpenUpdatePop(
-                          product.orderID,
-                          product.status || "Pending"
-                        )
-                      }
-                    >
-                      Update Order
-                    </button>: null}
-      {role === "Customer" ? (
-        <>
-          <p>{product.status || "Pending"}</p>
-          {["Placed", "Shipped", "Delivered"].includes(product.status) ? (
-            <p>No actions available</p>
+        <div className="listproduct-format-main1">
+          <p>customer Name</p>
+          <p>Order ID</p>
+          <p>Delivery Date</p>
+          {role === "Salesman" ? (
+            <>
+              <p>Update Order</p>
+              <p>Remove</p>
+            </>
           ) : (
-            <button
-              className="remove-button"
-              onClick={() => handleRemove(product.orderID)}
-            >
-              Cancel
-            </button>
+            <>
+              <p>Order Status</p>
+              <p>Cancel Order</p>
+            </>
           )}
-        </>
-      ) : (
-        <>
-          <button
-            className="remove-button"
-            onClick={() => handleRemove(product.orderID)}
-          >
-            Remove
-          </button>
-        </>
-      )}
-    </div>
-  ))}
-</div>
-
+        </div>
+        {products.map((product) => (
+          <div key={product.orderId} className="listproduct-item">
+            <p>{product.customerName}</p>
+            <p>{product.orderId}</p>
+            <p>{product.deliveryDate}</p>
+            {role === "Salesman" ? (
+              <button
+                className="update-order"
+                onClick={() =>
+                  handleOpenUpdatePop(
+                    product.orderId,
+                    product.orderStatus || "Pending"
+                  )
+                }
+              >
+                Update Order
+              </button>
+            ) : null}
+            {role === "Customer" ? (
+              <>
+                <p>{product.orderStatus || "Pending"}</p>
+                {["Placed", "Shipped", "Delivered"].includes(
+                  product.orderStatus
+                ) ? (
+                  <p>No actions available</p>
+                ) : (
+                  <button
+                    className="remove-button"
+                    onClick={() => handleRemove(product.orderId)}
+                  >
+                    Cancel
+                  </button>
+                )}
+              </>
+            ) : (
+              <>
+                <button
+                  className="remove-button"
+                  onClick={() => handleRemove(product.orderId)}
+                >
+                  Remove
+                </button>
+              </>
+            )}
+          </div>
+        ))}
+      </div>
 
       {showConfirmPop && (
         <div className="confirmation-pop1">
@@ -301,6 +325,48 @@ export default function Order() {
               value={formData.password}
               onChange={handleFormChange}
             />
+            <input
+              type="text"
+              name="street"
+              placeholder="street"
+              value={formData.street}
+              onChange={handleFormChange}
+            />
+            <input
+              type="text"
+              name="city"
+              placeholder="city"
+              value={formData.city}
+              onChange={handleFormChange}
+            />
+            <input
+              type="text"
+              name="state"
+              placeholder="state"
+              value={formData.state}
+              onChange={handleFormChange}
+            />
+            <input
+              type="text"
+              name="zipCode"
+              placeholder="Zip Code"
+              value={formData.zipCode}
+              onChange={handleFormChange}
+            />
+            <input
+              type="text"
+              name="userAge"
+              placeholder="User Age"
+              value={formData.userAge}
+              onChange={handleFormChange}
+            />
+            <input
+              type="text"
+              name="userGender"
+              placeholder="User Gender"
+              value={formData.userGender}
+              onChange={handleFormChange}
+            />
             <button className="cancel-button" onClick={cancelCreateAccount}>
               Cancel
             </button>
@@ -313,5 +379,3 @@ export default function Order() {
     </>
   );
 }
-
-
