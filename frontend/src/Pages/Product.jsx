@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ProductCard from '../Components/ProductCard/ProductCard'; 
 import Navbar from '../Components/Navbar/Navbar';
-import TradingButton from './TradingButton';
 
 const Product = () => {
   const [products, setProducts] = useState([]);
@@ -33,10 +32,7 @@ const Product = () => {
     setSelectedProduct(product);
   };
 
-  // Function to handle fetching of filtered products from TradingButton
-  const handleFetchProducts = (data) => {
-    setFilteredProducts(data); // Set the filtered products received from TradingButton
-  };
+  
 
   // Filter products based on selected category
   const displayedProducts = selectedCategory === 'All' 
@@ -64,7 +60,7 @@ const Product = () => {
           </select>
         </div>
 
-        <TradingButton onFetch={handleFetchProducts} />
+      
 
         {/* Display products based on selected filter */}
         <div className="product-grid">

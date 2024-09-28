@@ -46,7 +46,7 @@ const TradingButton = ({ onFetch }) => {
         <option value="Top Zip Codes">Top Zip Codes</option>
         <option value="Top Sold Products">Top Sold Products</option>
       </select>
-      <button className='trading' onClick={fetchData}>Trading</button>
+      <button className='trading' onClick={fetchData}>Trending</button>
       </div>
       {/* Display loading state */}
       {loading && <p>Loading...</p>}

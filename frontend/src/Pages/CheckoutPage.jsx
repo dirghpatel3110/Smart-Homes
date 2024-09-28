@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Navbar from "../Components/Navbar/Navbar";
+import './CSS/CheckoutPage.css';
 
 const CheckoutPage = ({ onCheckoutComplete, totalAmount, cartItems }) => {
-  const [deliveryOption, setDeliveryOption] = useState("home_delivery");
+  const [deliveryOption, setDeliveryOption] = useState(""); // Default to empty string
   const [stores, setStores] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
@@ -107,8 +109,6 @@ const CheckoutPage = ({ onCheckoutComplete, totalAmount, cartItems }) => {
       await axios.delete(
         `http://localhost:8080/myservlet/clearCart?userId=${userId}`
       );
-
-      alert("Transaction successful, your cart has been cleared.");
       onCheckoutComplete(response.data);
     } catch (error) {
       console.error("Error processing transaction", error);
@@ -116,12 +116,15 @@ const CheckoutPage = ({ onCheckoutComplete, totalAmount, cartItems }) => {
   };
 
   return (
-    <div>
+    <>
+    <Navbar />
+    <div className="container">
       <h2>Checkout</h2>
       <p>Total Price: ${finalPrice.toFixed(2)}</p>
-
-      <div>
-        <h3>Delivery Option</h3>
+     <br />
+     <h3>Delivery Option</h3>
+     <br />
+      <div className="delivery-options">  
         <label>
           <input
             type="radio"
@@ -224,15 +227,11 @@ const CheckoutPage = ({ onCheckoutComplete, totalAmount, cartItems }) => {
 
       <button onClick={handleSubmit}>Submit Order</button>
     </div>
+    </>
   );
 };
 
 export default CheckoutPage;
-
-
-
-
-
 
 
 
