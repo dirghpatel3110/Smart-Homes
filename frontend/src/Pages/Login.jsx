@@ -21,7 +21,7 @@ const Login = () => {
     formData.role = role;
 
     try {
-      const response = await axios.post('http://localhost:8080/backend_war_exploded/login', formData, {
+      const response = await axios.post('http://localhost:8080/myservlet/login', formData, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -31,6 +31,9 @@ const Login = () => {
         localStorage.setItem('name', response?.data?.name);
         localStorage.setItem('email', response?.data?.email);
         localStorage.setItem('role', response?.data?.role);
+        localStorage.setItem('id', response?.data?.id);
+        localStorage.setItem('UserAge', response?.data?.userAge);
+        localStorage.setItem('UserGender', response?.data?.userGender);
         window.location.replace('/product');
       } else {
         alert(response?.data?.errors);

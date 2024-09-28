@@ -4,20 +4,21 @@ import "./CSS/CartPage.css";
 import CheckoutForm from "./CheckoutForm";
 import Navbar from "../Components/Navbar/Navbar";
 
+
 const Cart = () => {
   const [cartData, setCartData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
-  
-  useEffect(() => {
-    const email = localStorage.getItem("email");
 
-    if (email) {
+  useEffect(() => {
+    const userId = localStorage.getItem("id"); 
+
+    if (userId) {
       axios
-        .get(`http://localhost:8080/backend_war_exploded/cart?email=${email}`)
+        .get(`http://localhost:8080/myservlet/cart?userId=${userId}`)
         .then((response) => {
-          setCartData(response?.data?.products || []);
+          setCartData(response.data || []);
           setLoading(false);
         })
         .catch((error) => {
@@ -25,70 +26,32 @@ const Cart = () => {
           setLoading(false);
         });
     } else {
-      setError("No email found in local storage");
+      setError("No userId found in local storage");
       setLoading(false);
     }
   }, []);
 
-  const handleRemoveProduct = (productId) => {
-    const email = localStorage.getItem("email");
-    const product = cartData.find((product) => product.productId === productId);
-
-    if (email && product) {
-      const payload = {
-        email: email,
-        action: "remove",
-        productId: productId,
-        category: product.category,
-        quantity: product.quantity,
-        name: product.name,
-      };
-
-      axios
-        .post("http://localhost:8080/backend_war_exploded/cart", payload)
-        .then((response) => {
-          setCartData((prevCartData) =>
-            prevCartData.filter(
-              (item) =>
-                !(
-                  item.productId === productId &&
-                  item.name === product.name &&
-                  item.category === product.category
-                )
-            )
-          );
-        })
-        .catch((error) => {
-          setError("Error removing product");
-        });
-    } else {
-      setError("No email found in local storage or product not found");
-    }
+  const handleRemoveProduct = (cartItemId) => {
+    axios
+      .delete(`http://localhost:8080/myservlet/cart?cartItemId=${cartItemId}`)
+      .then((response) => {
+        setCartData((prevCartData) =>
+          prevCartData.filter((item) => item.id !== cartItemId)
+        );
+      })
+      .catch((error) => {
+        setError("Error removing product");
+      });
   };
 
   const handleCheckoutComplete = (confirmationData) => {
     alert(`Order placed! Confirmation number: ${confirmationData.confirmationNumber}`);
   };
 
-  const totalItems = cartData.reduce(
-    (total, product) => total + product.quantity + (product.accessories ? product.accessories.length : 0),
-    0
-  );
-  
-  const totalAmount = cartData.reduce((total, product) => {
-    const productTotal = product.quantity > 0 ? product.price * product.quantity : 0;
-  
-    const accessoriesTotal = product.accessories
-      ? product.accessories.reduce(
-          (acc, accessory) => acc + accessory.price * (product.quantity > 0 ? product.quantity : 1), // Handle accessory pricing if product quantity is 0
-          0
-        )
-      : 0;
-    const warrantyTotal = product.warranty ? (product.warranty.price) : 0;
-    return total + productTotal + accessoriesTotal + warrantyTotal;
-
-  }, 0);
-  
+  let totalAmount = cartData.reduce((total, item) => {
+    const itemTotal = item.price 
+    return parseFloat((total + itemTotal).toFixed(2));
+}, 0);
 
   if (loading) {
     return <div className="loading">Loading cart data...</div>;
@@ -107,39 +70,26 @@ const Cart = () => {
       <Navbar />
       <div className="container">
         <div className="cart-container">
-          <h2>Total Items in Cart: {totalItems}</h2>
+          <h2>Total Items in Cart: {totalAmount}</h2>
           {cartData.length > 0 ? (
             <ul>
-              {cartData.map((product) => (
-                <li key={product.productId} className="cart-item">
-                  <h3>Product ID: {product.productId}</h3>
-                  <p>
-                    <strong>Name:</strong> {product.name}
-                  </p>
-                  <p>
-                    <strong>Price:</strong> ${product.price}
-                  </p>
-                  <p>
-                    <strong>Quantity:</strong> {product.quantity}
-                  </p>
-                  <p>
-                    <strong>Category:</strong> {product.category}
-                  </p>
-                  {
-                    product.warranty && <p> <strong>Warranty :</strong> {product.warranty.price}</p>
-                  }
-                  {product.accessories && product.accessories.length > 0 && (
+              {cartData.map((item) => (
+                <li key={item.id} className="cart-item">
+                  <h3>Product ID: {item.productId}</h3>
+                  <p><strong>Name:</strong> {item.productName}</p>
+                  {/* <p><strong>Price:</strong> ${item.price}</p> */}
+                  <p><strong>Quantity:</strong> {item.quantity}</p>
+                  <p><strong>Category:</strong> {item.category}</p>
+                  {/* {item.warranty > 0 && <p><strong>Warranty:</strong> ${item.warranty}</p>} */}
+                  {item.accessories && item.accessories.length > 0 && (
                     <div className="accessories1">
                       <h3>Accessories:</h3>
                       <ul>
-                        {product.accessories.map((accessory, idx) => (
+                        {item.accessories.map((accessory, idx) => (
                           <li key={idx}>
-                            <p>
-                              <strong>Name:</strong> {accessory.name},{" "}
-                            </p>
-                            <p>
-                              <strong>Price:</strong> ${accessory.price}
-                            </p>
+                            <p><strong>Name:</strong> {accessory.name}</p>
+                            {/* <p><strong>Price:</strong> ${accessory.price}</p> */}
+                            <p><strong>Quantity:</strong> {accessory.quantity}</p>
                           </li>
                         ))}
                       </ul>
@@ -147,7 +97,7 @@ const Cart = () => {
                   )}
                   <button
                     className="remove"
-                    onClick={() => handleRemoveProduct(product.productId)}
+                    onClick={() => handleRemoveProduct(item.id)}
                   >
                     Remove
                   </button>
@@ -171,6 +121,3 @@ const Cart = () => {
 };
 
 export default Cart;
-
-
-

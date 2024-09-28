@@ -41,7 +41,7 @@ const PickupForm = ({ cartData, onSubmit, onCancel }) => {
     } catch (error) {
       setError("Error during pickup checkout");
     }
-  };
+  };  
 
   return (
     <div className="popup-form">

@@ -8,7 +8,7 @@ Modal.setAppElement('#root');
 
 export default function ProductList() {
   
-  const [productsByCategory, setProductsByCategory] = useState({});
+  const [productsByCategory, setProductsByCategory] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [editModalIsOpen, setEditModalIsOpen] = useState(false);
@@ -21,6 +21,8 @@ export default function ProductList() {
     description: '',
     category: '',
     warranty: '',
+    retailerSpecialDiscounts:'',
+    manufacturerRebates:'',
     accessories: []
   });
   const [newAccessory, setNewAccessory] = useState({
@@ -35,6 +37,8 @@ export default function ProductList() {
     description: '',
     category: '',
     warranty: '',
+    retailerSpecialDiscounts:'',
+    manufacturerRebates:'',
     accessories: []
   });
   const [newAccessoryForAdd, setNewAccessoryForAdd] = useState({ name: '', price: '', description: '' }); // State for accessory in add modal
@@ -48,6 +52,8 @@ export default function ProductList() {
       description: '',
       category: '',
       warranty: '',
+      retailerSpecialDiscounts:'',
+      manufacturerRebates:'',
       accessories: []
     });
     setNewAccessoryForAdd({ name: '', price: '', description: '' }); 
@@ -72,9 +78,9 @@ export default function ProductList() {
   };
 
   useEffect(() => {
-    axios.get('http://localhost:8080/backend_war_exploded/products')
+    axios.get('http://localhost:8080/myservlet/products')
       .then(response => {
-        setProductsByCategory(response.data); 
+        setProductsByCategory(response?.data); 
       })
       .catch(error => {
         console.error('There was an error fetching the products!', error);
@@ -88,10 +94,10 @@ export default function ProductList() {
 
   const confirmDelete = () => {
     const { id, category } = productToDelete;
-    axios.delete(`http://localhost:8080/backend_war_exploded/products?id=${id}&category=${category}`)
+    axios.delete(`http://localhost:8080/myservlet/products?id=${id}&category=${category}`)
       .then(() => {
         const updatedProducts = { ...productsByCategory };
-        updatedProducts[category] = updatedProducts[category].filter(product => product.id !== id);
+        updatedProducts[category] = updatedProducts.filter(product => product.id !== id);
         setProductsByCategory(updatedProducts);
         closeConfirmModal();
       })
@@ -100,14 +106,14 @@ export default function ProductList() {
       });
   };
 
-  const handleView = (productId, category) => {
-    const product = productsByCategory[category].find(p => p.id === productId);
+  const handleView = (productId) => {
+    const product = productsByCategory.find(p => p.id === productId);
     setSelectedProduct(product);
     setModalIsOpen(true);
   };
 
-  const handleEdit = (productId, category) => {
-    const product = productsByCategory[category].find(p => p.id === productId);
+  const handleEdit = (productId) => {
+    const product = productsByCategory.find(p => p.id === productId);
     setEditedProduct(product);
     setEditModalIsOpen(true);
   };
@@ -126,6 +132,8 @@ export default function ProductList() {
       description: '',
       category: '',
       warranty: '',
+      retailerSpecialDiscounts:'',
+      manufacturerRebates:'',
       accessories: []
     });
   };
@@ -160,13 +168,13 @@ export default function ProductList() {
 
   const submitEdit = (e) => {
     e.preventDefault();
-
+   
     const productToUpdate = {
       ...editedProduct,
       id: String(editedProduct.id)
-    };
-
-    axios.put('http://localhost:8080/backend_war_exploded/products', productToUpdate)
+    }
+  
+    axios.put('http://localhost:8080/myservlet/products', productToUpdate)
       .then(response => {
         if (response.status === 200) {
           const updatedProducts = { ...productsByCategory };
@@ -184,8 +192,8 @@ export default function ProductList() {
 
   const submitAddProduct = (e) => {
     e.preventDefault();
-
-    axios.post('http://localhost:8080/backend_war_exploded/products', newProduct)
+  
+    axios.post('http://localhost:8080/myservlet/products', newProduct)
       .then(response => {
         if (response.status === 201) {
           const updatedProducts = { ...productsByCategory };
@@ -211,9 +219,7 @@ export default function ProductList() {
     <div className='list-product'>
       <h1>All Products List</h1>
       <div className="btn"><p><button className='add' onClick={openAddModal}>ADD</button></p></div>
-      {Object.keys(productsByCategory).map(category => (
-        <div key={category}>
-          <h2>{category}</h2>
+        <div>
           <div className="listproduct-format-main">
             <p>Id</p>
             <p>Name</p>
@@ -224,19 +230,18 @@ export default function ProductList() {
           </div>
           <div className="listproduct-allproduct">
             <hr />
-            {productsByCategory[category].map(product => (
+            {productsByCategory.map(product => (
               <div key={product.id} className="listproduct-format-main">
                 <p>{product.id}</p>
                 <p>{product.name}</p>
                 <p>${product.price}</p>
-                <p><button onClick={() => handleView(product.id, category)}>View</button></p>
-                <p><button onClick={() => handleEdit(product.id, category)}>Edit</button></p>
-                <p><button onClick={() => handleDelete(product.id, category)}>Remove</button></p>
+                <p><button onClick={() => handleView(product.id)}>View</button></p>
+                <p><button onClick={() => handleEdit(product.id)}>Edit</button></p>
+                <p><button onClick={() => handleDelete(product.id)}>Remove</button></p>
               </div>
             ))}
           </div>
-        </div>
-      ))}
+        </div>     
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
@@ -252,7 +257,10 @@ export default function ProductList() {
             <p><strong>Price:</strong> ${selectedProduct.price}</p>
             <p><strong>Description:</strong> {selectedProduct.description}</p>
             <p><strong>Category:</strong> {selectedProduct.category}</p>
-            <p><strong>Warranty:</strong> {selectedProduct.warranty.price}</p>
+            <p><strong>Warranty:</strong> {selectedProduct.warranty_price}</p>
+            <p><strong>Retailer-Special-Discounts:</strong> {selectedProduct.retailer_special_discounts}</p>
+            <p><strong>Manufacturer-Rebate:</strong> {selectedProduct.manufacturer_rebate}</p>
+            <br />
             <h3>Accessories:</h3>
             {selectedProduct.accessories.map((accessory, index) => (
               <div key={index}>
@@ -265,6 +273,7 @@ export default function ProductList() {
         ) : (
           <p>No product selected</p>
         )}
+        <br />
         <button onClick={closeModal} className="cancel-button">Close</button>
       </Modal>
       <Modal
@@ -285,8 +294,11 @@ export default function ProductList() {
           <label>Category</label>
           <input type="text" name="category" value={newProduct.category} onChange={handleNewProductInputChange} required />
           <label>Warranty</label>
-          <input type="text" name="warranty" value={newProduct.warranty} onChange={handleNewProductInputChange} />
-
+          <input type="text" name="warranty" value={newProduct.warranty_price} onChange={handleNewProductInputChange} />
+          <label>Retailer-Special-Discounts</label>
+          <input type="text" name="retailerSpecialDiscounts" value={newProduct.retailer_special_discounts} onChange={handleNewProductInputChange} />
+          <label>Manufacturer-Rebate</label>
+          <input type="text" name="manufacturerRebates" value={newProduct.manufacturer_rebate} onChange={handleNewProductInputChange} />
           <h3>Add Accessories:</h3>
           <input type="text" placeholder="Accessory Name" name="name" value={newAccessoryForAdd.name} onChange={handleNewAccessoryForAddChange} />
           <input type="text" placeholder="Accessory Price" name="price" value={newAccessoryForAdd.price} onChange={handleNewAccessoryForAddChange} />
@@ -316,10 +328,13 @@ export default function ProductList() {
           <input type="text" name="description" value={editedProduct.description} onChange={handleInputChange} />
           <label>Category</label>
           <input type="text" name="category" value={editedProduct.category} onChange={handleInputChange} />
-          <div className="waT">
           <label>Warranty</label>
-          <input type="text" name="warranty" value={editedProduct.warranty} />
-          </div>
+          <input type="text" name="warranty" value={editedProduct.warranty_price} onChange={handleInputChange}/>
+          <label>Retailer-Special-Discounts</label>
+          <input type="text" name="retailerSpecialDiscounts" value={editedProduct.retailer_special_discounts} onChange={handleInputChange} />
+          <label>Manufacturer-Rebate</label>
+          <input type="text" name="manufacturerRebates" value={editedProduct.manufacturer_rebate} onChange={handleInputChange} />
+          
           <h3>Edit Accessories:</h3>
           {editedProduct.accessories.map((accessory, index) => (
             <div key={index}>
@@ -395,5 +410,3 @@ export default function ProductList() {
     </>
   );
 }
-
-
