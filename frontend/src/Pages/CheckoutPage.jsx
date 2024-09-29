@@ -70,9 +70,8 @@ const CheckoutPage = ({ onCheckoutComplete, totalAmount, cartItems }) => {
   const handleSubmit = async () => {
     const userId = localStorage.getItem("id");
 
-    // Prepare the common transaction data
     const transactionData = {
-      userId: parseInt(userId), // Ensure userId is an integer
+      userId: parseInt(userId), 
       customerName: formData.name,
       creditCardNumber: formData.creditCardNumber,
       totalSales: finalPrice,
@@ -108,7 +107,6 @@ const CheckoutPage = ({ onCheckoutComplete, totalAmount, cartItems }) => {
       })),
     };
 
-    // Log the transaction data for debugging purposes
     console.log(transactionData);
 
     try {
@@ -117,7 +115,6 @@ const CheckoutPage = ({ onCheckoutComplete, totalAmount, cartItems }) => {
         transactionData
       );
 
-      // Clear the cart after a successful transaction
       await axios.delete(
         `http://localhost:8080/myservlet/clearCart?userId=${userId}`
       );

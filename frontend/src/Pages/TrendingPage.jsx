@@ -50,7 +50,7 @@ const TrendingPage = () => {
     };
 
     fetchTrendingData();
-    fetchTopRatedProducts(); // Fetch top-rated products
+    fetchTopRatedProducts(); 
     fetchProducts();
   }, []);
 
@@ -64,7 +64,6 @@ const TrendingPage = () => {
         <br />
         <h1>Trending Products</h1>
 
-        {/* Display Top Rated Products */}
         <h2>Most Liked Products:</h2>
         <ul className="trending-products-list">
           {topRatedProducts.map((product) => (

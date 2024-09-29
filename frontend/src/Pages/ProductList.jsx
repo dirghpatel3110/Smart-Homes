@@ -296,9 +296,9 @@ export default function ProductList() {
           <label>Warranty</label>
           <input type="text" name="warranty" value={newProduct.warranty_price} onChange={handleNewProductInputChange} />
           <label>Retailer-Special-Discounts</label>
-          <input type="text" name="retailerSpecialDiscounts" value={newProduct.retailer_special_discounts} onChange={handleNewProductInputChange} />
+          <input type="text" name="retailerSpecialDiscounts" value={newProduct.retailerSpecialDiscounts} onChange={handleNewProductInputChange} />
           <label>Manufacturer-Rebate</label>
-          <input type="text" name="manufacturerRebates" value={newProduct.manufacturer_rebate} onChange={handleNewProductInputChange} />
+          <input type="text" name="manufacturerRebates" value={newProduct.manufacturerRebates} onChange={handleNewProductInputChange} />
           <h3>Add Accessories:</h3>
           <input type="text" placeholder="Accessory Name" name="name" value={newAccessoryForAdd.name} onChange={handleNewAccessoryForAddChange} />
           <input type="text" placeholder="Accessory Price" name="price" value={newAccessoryForAdd.price} onChange={handleNewAccessoryForAddChange} />
@@ -331,9 +331,9 @@ export default function ProductList() {
           <label>Warranty</label>
           <input type="text" name="warranty" value={editedProduct.warranty_price} onChange={handleInputChange}/>
           <label>Retailer-Special-Discounts</label>
-          <input type="text" name="retailerSpecialDiscounts" value={editedProduct.retailer_special_discounts} onChange={handleInputChange} />
+          <input type="text" name="retailerSpecialDiscounts" value={editedProduct.retailerSpecialDiscounts} onChange={handleInputChange} />
           <label>Manufacturer-Rebate</label>
-          <input type="text" name="manufacturerRebates" value={editedProduct.manufacturer_rebate} onChange={handleInputChange} />
+          <input type="text" name="manufacturerRebates" value={editedProduct.manufacturerRebates} onChange={handleInputChange} />
           
           <h3>Edit Accessories:</h3>
           {editedProduct.accessories.map((accessory, index) => (
