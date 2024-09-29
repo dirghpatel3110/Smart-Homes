@@ -19,6 +19,7 @@ Shopping Cart: Customers can add/remove items from the cart and proceed to check
 Checkout Process: Customers can enter personal and payment information during checkout.<br>
 Order Status: Customers can check or cancel their orders.<br>
 Trending Button: Customers can see trending Product.<br>
+Product Review Button: Customer Can add Product Reivew.<br>
 
 # Setup Instructions
 
