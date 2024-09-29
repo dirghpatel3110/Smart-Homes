@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../Components/Navbar/Navbar";
+import "./CSS/TrendingPage.css";
 
 const TrendingPage = () => {
   const [trendingData, setTrendingData] = useState(null);
@@ -29,7 +30,7 @@ const TrendingPage = () => {
     const fetchTopRatedProducts = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/myservlet/topRatedProducts" // Update the URL to your servlet
+          "http://localhost:8080/myservlet/topRatedProducts"
         );
         setTopRatedProducts(response.data);
       } catch (err) {
@@ -42,7 +43,7 @@ const TrendingPage = () => {
         const response = await axios.get(
           "http://localhost:8080/myservlet/products"
         );
-        setProducts(response?.data); 
+        setProducts(response?.data);
       } catch (err) {
         setError("Error fetching product data");
       }
@@ -52,45 +53,45 @@ const TrendingPage = () => {
     fetchTopRatedProducts(); // Fetch top-rated products
     fetchProducts();
   }, []);
-  
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
   return (
     <>
       <Navbar />
-      <div>
+      <div className="trending">
         <br />
         <h1>Trending Products</h1>
-        
-
 
         {/* Display Top Rated Products */}
-        <h2>Most liked products:</h2>
-        <ul>
+        <h2>Most Liked Products:</h2>
+        <ul className="trending-products-list">
           {topRatedProducts.map((product) => (
-            <li key={product.ProductModelName}>
-              Product Name: {product.ProductModelName} - Average Rating: {product.AverageRating}
+            <li key={product.ProductModelName} className="trending-product-item">
+              <span className="product-name">Product Name: {product.ProductModelName} </span>
+              <span>Average Rating: {product.AverageRating}</span>
             </li>
           ))}
         </ul>
         <br />
-        {/* Top Zip Codes */}
+
         {trendingData && (
           <div>
             <h2>Top Zip Codes:</h2>
-            <ul>
+            <ul className="trending-products-list">
               {trendingData.topZipCodes.map((zipCode, index) => (
-                <li key={zipCode}>
-                  Zip Code: {zipCode} Bought Count: {trendingData.topZipCodeCounts[index]}
+                <li key={zipCode} className="trending-product-item">
+                  <span className="product-name">Zip Code: {zipCode} </span>
+                 <span> Bought Count: {trendingData.topZipCodeCounts[index]} </span>
                 </li>
               ))}
             </ul>
             <br />
-            
-            {/* Top Sold Products */}
+
             <h2>Top Sold Products:</h2>
-            <ul>
+
+            <ul className="trending-products-list">
               {products
                 .map((product) => {
                   const index = trendingData.topProducts.indexOf(product.id);
@@ -105,15 +106,14 @@ const TrendingPage = () => {
                 .filter((product) => product !== null)
                 .sort((a, b) => b.boughtCount - a.boughtCount)
                 .map((product) => (
-                  <li key={product.productId}>
-                    Product Name: {product.name} - Bought Count: {product.boughtCount}
+                  <li key={product.productId} className="trending-product-item">
+                    <span className="product-name">Product Name: {product.name}</span>
+                    <span>Bought Count: {product.boughtCount}</span>
                   </li>
                 ))}
             </ul>
           </div>
         )}
-
-        
       </div>
     </>
   );
