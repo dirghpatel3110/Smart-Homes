@@ -242,7 +242,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "../Components/Navbar/Navbar";
-import './CSS/CheckoutPage.css';
 
 const CheckoutPage = ({ onCheckoutComplete, totalAmount, cartItems }) => {
   const [deliveryOption, setDeliveryOption] = useState(""); // Default to empty string

@@ -190,74 +190,64 @@ h2:hover {
   animation: fadeIn 0.8s ease forwards;
 }
 
-/* Product Review Modal Styles */
-.Modal {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  max-width: 500px;
-  max-height: 80vh; /* Set max height for the modal */
-  overflow-y: auto; /* Allow vertical scrolling if content exceeds max height */
-  margin: auto;
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  animation: fadeIn 0.3s ease;
-}
 
-/* Overlay styles for modal background */
-.Overlay {
+.ReactModal__Overlay {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7); 
+  z-index: 1000; 
 }
 
-/* Header styles in modal */
+
+.Modal {
+  background: white; 
+  border-radius: 10px; 
+  padding: 20px; 
+  max-width: 500px; 
+  max-height: 80vh; 
+  width: 100%; 
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); 
+  overflow-y: auto; 
+}
+
 .Modal h2 {
-  margin-bottom: 20px;
-  font-size: 24px;
-  color: #333;
-  text-align: center;
+  margin-top: 0; 
 }
 
-/* Form field styles */
-.Modal form {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Individual input styles */
-.Modal input,
-.Modal textarea {
-  margin-bottom: 15px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-}
-
-/* Styles for buttons in the modal */
 .Modal button {
-  padding: 10px;
+  margin-top: 10px; 
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
+  border-radius: 5px; 
+  padding: 10px; 
+  cursor: pointer; 
 }
 
 .Modal button:hover {
-  background-color: #0056b3;
+  background-color: #0056b3; 
 }
 
-/* Responsive styles */
-@media (max-width: 600px) {
-  .Modal {
-    width: 90%;
-  }
+
+.Modal input,
+.Modal select,
+.Modal textarea {
+  width: 100%; 
+  padding: 10px; 
+  margin-top: 5px; 
+  margin-bottom: 10px; 
+  border: 1px solid #ccc; 
+  border-radius: 5px; 
+  box-sizing: border-box; 
+}
+
+
+.Modal textarea {
+  resize: vertical; 
 }

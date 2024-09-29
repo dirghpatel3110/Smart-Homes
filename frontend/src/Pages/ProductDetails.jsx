@@ -299,7 +299,7 @@ const ProductDetails = () => {
         <p>
           <strong>Price: </strong> ${product.price} per unit
         </p>
-        <p>
+        <p>  
           <strong>Retailer Special Discounts: </strong> $
           {product.retailer_special_discounts || 0}
         </p>
@@ -391,6 +391,8 @@ const ProductDetails = () => {
           </span>
           <br />
           <br />
+          <h4>Review : {reviewData.ReviewRating}/5</h4>
+          <br />
           <button onClick={openModal} className="review-button">
             Product Review
           </button>
@@ -405,9 +407,6 @@ const ProductDetails = () => {
           Add to Cart
         </button>
 
-        {/* Button to open the Product Review Modal */}
-
-        {/* Review Modal */}
         <Modal
           isOpen={modalIsOpen}
           onRequestClose={closeModal}
