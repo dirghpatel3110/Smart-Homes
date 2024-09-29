@@ -172,7 +172,7 @@ const Product = () => {
       <div>
         <div className="category-filter">
           <label htmlFor="category">Filter by category:</label>
-          <select
+          <select 
             id="category"
             value={selectedCategory}
             onChange={(e) => handleCategoryChange(e.target.value)}

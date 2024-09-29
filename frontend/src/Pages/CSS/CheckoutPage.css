@@ -1,0 +1,53 @@
+.checkoutPage {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.checkoutPage h2 {
+    color: #333;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  
+.checkoutPage h3 {
+    color: #444;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  
+.checkoutPage  p {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 20px;
+  }
+
+.delivery-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.delivery-options label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+
+input[type="radio"] {
+    margin-right: 10px;
+  }
+  
+input[type="text"],select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+

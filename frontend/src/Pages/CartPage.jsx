@@ -45,7 +45,7 @@ const Cart = () => {
 
   const handleCheckoutComplete = (confirmationData) => {
     alert(
-      `Order placed! Confirmation number: ${confirmationData.confirmationNumber}`
+      `Order placed! successfully`
     );
   };
 

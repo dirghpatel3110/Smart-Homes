@@ -21,6 +21,8 @@
 .category-filter select {
   padding: 8px;
   font-size: 1rem;
+  margin-top: 18px;
+  width: 200px;
   border: 1px solid #ccc;
   border-radius: 4px;
   background-color: #fff;

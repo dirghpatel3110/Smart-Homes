@@ -611,7 +611,7 @@ const ProductDetails = () => {
                 required
               />
             </div>
-            <button type="submit">Submit Review</button>
+            <button type="submit">Submit Review</button> &nbsp;
             <button type="button" onClick={closeModal}>
               Cancel
             </button>
