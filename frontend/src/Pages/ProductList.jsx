@@ -20,9 +20,9 @@ export default function ProductList() {
     price: '',
     description: '',
     category: '',
-    warranty: '',
-    retailerSpecialDiscounts:'',
-    manufacturerRebates:'',
+    warranty_price: '',
+    retailer_special_discounts:'',
+    manufacturer_rebate:'',
     accessories: []
   });
   const [newAccessory, setNewAccessory] = useState({
@@ -36,9 +36,9 @@ export default function ProductList() {
     price: '',
     description: '',
     category: '',
-    warranty: '',
-    retailerSpecialDiscounts:'',
-    manufacturerRebates:'',
+    warranty_price: '',
+    retailer_special_discounts:'',
+    manufacturer_rebate:'',
     accessories: []
   });
   const [newAccessoryForAdd, setNewAccessoryForAdd] = useState({ name: '', price: '', description: '' }); // State for accessory in add modal
@@ -51,9 +51,9 @@ export default function ProductList() {
       price: '',
       description: '',
       category: '',
-      warranty: '',
-      retailerSpecialDiscounts:'',
-      manufacturerRebates:'',
+      warranty_price: '',
+      retailer_special_discounts:'',
+      manufacturer_rebate:'',
       accessories: []
     });
     setNewAccessoryForAdd({ name: '', price: '', description: '' }); 
@@ -131,9 +131,9 @@ export default function ProductList() {
       price: '',
       description: '',
       category: '',
-      warranty: '',
-      retailerSpecialDiscounts:'',
-      manufacturerRebates:'',
+      warranty_price: '',
+      retailer_special_discounts:'',
+      manufacturer_rebate:'',
       accessories: []
     });
   };
@@ -294,11 +294,11 @@ export default function ProductList() {
           <label>Category</label>
           <input type="text" name="category" value={newProduct.category} onChange={handleNewProductInputChange} required />
           <label>Warranty</label>
-          <input type="text" name="warranty" value={newProduct.warranty_price} onChange={handleNewProductInputChange} />
+          <input type="text" name="warranty_price" value={newProduct.warranty_price} onChange={handleNewProductInputChange} />
           <label>Retailer-Special-Discounts</label>
-          <input type="text" name="retailerSpecialDiscounts" value={newProduct.retailerSpecialDiscounts} onChange={handleNewProductInputChange} />
+          <input type="text" name="retailer_special_discounts" value={newProduct.retailer_special_discounts} onChange={handleNewProductInputChange} />
           <label>Manufacturer-Rebate</label>
-          <input type="text" name="manufacturerRebates" value={newProduct.manufacturerRebates} onChange={handleNewProductInputChange} />
+          <input type="text" name="manufacturer_rebate" value={newProduct.manufacturer_rebate} onChange={handleNewProductInputChange} />
           <h3>Add Accessories:</h3>
           <input type="text" placeholder="Accessory Name" name="name" value={newAccessoryForAdd.name} onChange={handleNewAccessoryForAddChange} />
           <input type="text" placeholder="Accessory Price" name="price" value={newAccessoryForAdd.price} onChange={handleNewAccessoryForAddChange} />
@@ -329,11 +329,12 @@ export default function ProductList() {
           <label>Category</label>
           <input type="text" name="category" value={editedProduct.category} onChange={handleInputChange} />
           <label>Warranty</label>
-          <input type="text" name="warranty" value={editedProduct.warranty_price} onChange={handleInputChange}/>
+          <input type="text" name="warranty_price" value={editedProduct.warranty_price} onChange={handleInputChange}/>
           <label>Retailer-Special-Discounts</label>
-          <input type="text" name="retailerSpecialDiscounts" value={editedProduct.retailerSpecialDiscounts} onChange={handleInputChange} />
+          <input type="text" name="retailer_special_discounts" value={editedProduct.retailer_special_discounts
+} onChange={handleInputChange} />
           <label>Manufacturer-Rebate</label>
-          <input type="text" name="manufacturerRebates" value={editedProduct.manufacturerRebates} onChange={handleInputChange} />
+          <input type="text" name="manufacturer_rebate" value={editedProduct.manufacturer_rebate} onChange={handleInputChange} />
           
           <h3>Edit Accessories:</h3>
           {editedProduct.accessories.map((accessory, index) => (

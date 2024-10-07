@@ -8,6 +8,7 @@ import ProductDetails from './Pages/ProductDetails';
 import CartPage from './Pages/CartPage';
 import Order from './Pages/Order';
 import TrendingPage from './Pages/TrendingPage';
+import ProductInventory from './Pages/ProductInventory';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
       <Route exact path="/cart" element={<CartPage/>} />
       <Route exact path="/order" element={<Order/>}/>
       <Route path="/trending" element={<TrendingPage/>} />
+      <Route path="/inventory/available" element={<ProductInventory/>} />
       </Routes>
       </BrowserRouter>
     </div>

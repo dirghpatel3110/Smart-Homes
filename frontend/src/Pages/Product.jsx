@@ -58,7 +58,7 @@ const Product = () => {
                 {category}
               </option>
             ))}
-          </select>
+          </select>  
         </div>
 
         <button onClick={handleTrendingButtonClick} className="trending-button">
