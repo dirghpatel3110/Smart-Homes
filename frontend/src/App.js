@@ -11,7 +11,7 @@ import TrendingPage from './Pages/TrendingPage';
 import ProductInventory from './Pages/ProductInventory';
 import ProductsOnSale from './Pages/ProductsOnSale';
 import ProductsWithRebates from './Pages/ProductsWithRebates';
-
+import ProductInventoryBarChart from './Pages/ProductInventoryBarChart';
 
 function App() {
   return (
@@ -29,6 +29,7 @@ function App() {
       <Route path="/inventory/available" element={<ProductInventory/>} />
       <Route path="/inventory/on-sale" element={<ProductsOnSale/>} />
       <Route path="/inventory/rebates" element={<ProductsWithRebates/>}/>
+      <Route path='/inventory/bar-chart' element={<ProductInventoryBarChart/>}/>
       </Routes>
       </BrowserRouter>
     </div>
