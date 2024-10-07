@@ -478,9 +478,16 @@ public Store getStoreById(int storeId) throws SQLException {
             preparedStatement.executeUpdate();
         }
     }
+
+
     public void addTransaction(Transaction transaction) throws SQLException {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_TRANSACTION_SQL)) {
+    Connection connection = null;
+    try {
+        connection = getConnection();
+        connection.setAutoCommit(false);
+
+        // Insert transaction
+        try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_TRANSACTION_SQL)) {
             preparedStatement.setInt(1, transaction.getUserId());
             preparedStatement.setString(2, transaction.getCustomerName());
             preparedStatement.setString(3, transaction.getStreet());
@@ -513,10 +520,38 @@ public Store getStoreById(int storeId) throws SQLException {
             }
             preparedStatement.setString(23, transaction.getDeliveryOption());
             preparedStatement.setString(24, transaction.getOrderStatus());
-       
             preparedStatement.executeUpdate();
-        } 
+        }
+
+        // Update product inventory
+        String updateInventorySQL = "UPDATE products SET availableItems = availableItems - ? WHERE id = ?";
+        try (PreparedStatement updateInventoryStatement = connection.prepareStatement(updateInventorySQL)) {
+            updateInventoryStatement.setInt(1, transaction.getQuantity());
+            updateInventoryStatement.setInt(2, transaction.getProductId());
+            updateInventoryStatement.executeUpdate();
+        }
+
+        connection.commit();
+    } catch (SQLException e) {
+        if (connection != null) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        throw e;
+    } finally {
+        if (connection != null) {
+            try {
+                connection.setAutoCommit(true);
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
+}
 
     public List<Transaction> getAllTransactions() throws SQLException {
         List<Transaction> transactions = new ArrayList<>();
@@ -604,17 +639,73 @@ public Store getStoreById(int storeId) throws SQLException {
     }
 }
 
-public boolean deleteOrder(String orderID) throws SQLException {
-    String query = "DELETE FROM transactions WHERE order_id = ?"; 
 
-    try (Connection connection = getConnection();
-         PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-        
-        preparedStatement.setString(1, orderID);
-        int rowsAffected = preparedStatement.executeUpdate();
-        return rowsAffected > 0; 
+public boolean deleteOrder(String orderID) throws SQLException {
+    Connection connection = null;
+    try {
+        connection = getConnection();
+        connection.setAutoCommit(false);
+
+        // First, get the order details
+        String getOrderQuery = "SELECT product_id, quantity FROM transactions WHERE order_id = ?";
+        try (PreparedStatement getOrderStmt = connection.prepareStatement(getOrderQuery)) {
+            getOrderStmt.setString(1, orderID);
+            ResultSet rs = getOrderStmt.executeQuery();
+            if (rs.next()) {
+                int productId = rs.getInt("product_id");
+                int quantity = rs.getInt("quantity");
+
+                // Update product inventory
+                updateProductInventoryOnCancel(productId, quantity);
+
+                // Delete the order
+                String deleteQuery = "DELETE FROM transactions WHERE order_id = ?";
+                try (PreparedStatement deleteStmt = connection.prepareStatement(deleteQuery)) {
+                    deleteStmt.setString(1, orderID);
+                    int rowsAffected = deleteStmt.executeUpdate();
+                    
+                    if (rowsAffected > 0) {
+                        connection.commit();
+                        return true;
+                    }
+                }
+            }
+        }
+
+        connection.rollback();
+        return false;
+    } catch (SQLException e) {
+        if (connection != null) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        throw e;
+    } finally {
+        if (connection != null) {
+            try {
+                connection.setAutoCommit(true);
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
+
+
+public void updateProductInventoryOnCancel(int productId, int quantity) throws SQLException {
+    String query = "UPDATE products SET availableItems = availableItems + ? WHERE id = ?";
+    try (Connection conn = getConnection();
+         PreparedStatement pst = conn.prepareStatement(query)) {
+        pst.setInt(1, quantity);
+        pst.setInt(2, productId);
+        pst.executeUpdate();
+    }
+}
+
 
        public List<Product> getMostLikedProducts() throws SQLException {
         List<Product> mostLikedProducts = new ArrayList<>();
@@ -751,16 +842,6 @@ public Map<Integer, Integer> getTopFiveMostSoldProducts() throws SQLException {
 }
 
 
-public void updateProductInventory(int productId, int quantity) throws SQLException {
-    String query = "UPDATE products SET availableItems = availableItems - ? WHERE id = ?";
-    try (Connection conn = getConnection();
-         PreparedStatement pst = conn.prepareStatement(query)) {
-        pst.setInt(1, quantity);
-        pst.setInt(2, productId);
-        pst.executeUpdate();
-    }
-}
-
 public List<Product> getProductsWithRebates() throws SQLException {
     List<Product> productsWithRebates = new ArrayList<>();
     String query = "SELECT * FROM products WHERE manufacturer_rebates > 0";
@@ -810,6 +891,28 @@ public List<Product> getProductsWithRebates() throws SQLException {
         }
     }
     return salesReport;
+}
+
+
+public List<Map<String, Object>> getDailySalesTransactions() throws SQLException {
+    List<Map<String, Object>> dailySales = new ArrayList<>();
+    String query = "SELECT DATE(purchase_date) as date, SUM(total_sales) as total_sales " +
+                   "FROM transactions " +
+                   "GROUP BY DATE(purchase_date) " +
+                   "ORDER BY DATE(purchase_date)";
+
+    try (Connection conn = getConnection();
+         PreparedStatement pst = conn.prepareStatement(query);
+         ResultSet rs = pst.executeQuery()) {
+        
+        while (rs.next()) {
+            Map<String, Object> daySales = new HashMap<>();
+            daySales.put("date", rs.getDate("date"));
+            daySales.put("totalSales", rs.getDouble("total_sales"));
+            dailySales.add(daySales);
+        }
+    }
+    return dailySales;
 }
 
 }

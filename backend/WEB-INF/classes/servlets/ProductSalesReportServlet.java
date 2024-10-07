@@ -39,7 +39,7 @@ public class ProductSalesReportServlet extends HttpServlet {
                 // Update product inventory
                 int productId = (int) productSales.get("productId");
                 int totalItemsSold = (int) productSales.get("totalItemsSold");
-                dataStore.updateProductInventory(productId, totalItemsSold);
+                // dataStore.updateProductInventory(productId, totalItemsSold);
             }
             
             out.print(jsonArray.toString());
