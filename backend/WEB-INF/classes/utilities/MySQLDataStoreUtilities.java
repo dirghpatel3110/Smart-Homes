@@ -7,6 +7,7 @@ import model.Cart;
 import model.Store;
 import model.TopResults;
 import model.Transaction;
+import model.ProductInventory;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -705,5 +706,25 @@ public Map<Integer, Integer> getTopFiveMostSoldProducts() throws SQLException {
 
     return productCounts;
 }
+
+   public List<ProductInventory> getProductInventory() throws SQLException {
+    List<ProductInventory> inventory = new ArrayList<>();
+    String query = "SELECT name, price, availableItems FROM products";
+    
+    try (Connection conn = getConnection();
+         PreparedStatement pst = conn.prepareStatement(query);
+         ResultSet rs = pst.executeQuery()) {
+        
+        while (rs.next()) {
+            String name = rs.getString("name");
+            double price = rs.getDouble("price");
+            int availableItems = rs.getInt("availableItems");
+            
+            inventory.add(new ProductInventory(name, price, availableItems));
+        }
+    }
+    return inventory;
+}
+
 
 }
