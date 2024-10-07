@@ -726,5 +726,52 @@ public Map<Integer, Integer> getTopFiveMostSoldProducts() throws SQLException {
     return inventory;
 }
 
+    public List<Product> getProductsOnSale() throws SQLException {
+    List<Product> productsOnSale = new ArrayList<>();
+    String query = "SELECT * FROM products WHERE retailer_special_discounts > 0";
+    
+    try (Connection conn = getConnection();
+         PreparedStatement pst = conn.prepareStatement(query);
+         ResultSet rs = pst.executeQuery()) {
+        
+        while (rs.next()) {
+            Product product = new Product();
+            product.setId(rs.getInt("id"));
+            product.setName(rs.getString("name"));
+            product.setDescription(rs.getString("description"));
+            product.setPrice(rs.getDouble("price"));
+            product.setRetailerSpecialDiscounts(rs.getDouble("retailer_special_discounts"));
+            product.setManufacturerRebates(rs.getDouble("manufacturer_rebates"));
+            product.setWarrantyPrice(rs.getDouble("warranty_price"));
+            product.setCategory(rs.getString("category"));
+            productsOnSale.add(product);
+        }
+    }
+    return productsOnSale;
+}
+
+public List<Product> getProductsWithRebates() throws SQLException {
+    List<Product> productsWithRebates = new ArrayList<>();
+    String query = "SELECT * FROM products WHERE manufacturer_rebates > 0";
+    
+    try (Connection conn = getConnection();
+         PreparedStatement pst = conn.prepareStatement(query);
+         ResultSet rs = pst.executeQuery()) {
+        
+        while (rs.next()) {
+            Product product = new Product();
+            product.setId(rs.getInt("id"));
+            product.setName(rs.getString("name"));
+            product.setDescription(rs.getString("description"));
+            product.setPrice(rs.getDouble("price"));
+            product.setRetailerSpecialDiscounts(rs.getDouble("retailer_special_discounts"));
+            product.setManufacturerRebates(rs.getDouble("manufacturer_rebates"));
+            product.setWarrantyPrice(rs.getDouble("warranty_price"));
+            product.setCategory(rs.getString("category"));
+            productsWithRebates.add(product);
+        }
+    }
+    return productsWithRebates;
+}
 
 }
