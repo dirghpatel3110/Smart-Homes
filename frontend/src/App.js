@@ -12,6 +12,9 @@ import ProductInventory from './Pages/ProductInventory';
 import ProductsOnSale from './Pages/ProductsOnSale';
 import ProductsWithRebates from './Pages/ProductsWithRebates';
 import ProductInventoryBarChart from './Pages/ProductInventoryBarChart';
+import ProductSalesReport from './Pages/ProductSalesReport';
+import DailySalesTransactions from './Pages/DailySalesTransactions';
+import ProductSalesBarChart from './Pages/ProductSalesBarChart';
 
 function App() {
   return (
@@ -30,6 +33,9 @@ function App() {
       <Route path="/inventory/on-sale" element={<ProductsOnSale/>} />
       <Route path="/inventory/rebates" element={<ProductsWithRebates/>}/>
       <Route path='/inventory/bar-chart' element={<ProductInventoryBarChart/>}/>
+      <Route path='/sales-report/product-sold' element={<ProductSalesReport/>}/>
+      <Route path='/sales-report/daily-transactions' element={<DailySalesTransactions/>}/>
+      <Route path='/sales-report/bar-chart' element={<ProductSalesBarChart/>}/>
       </Routes>
       </BrowserRouter>
     </div>

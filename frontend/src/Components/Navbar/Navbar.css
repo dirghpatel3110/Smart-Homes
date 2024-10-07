@@ -39,6 +39,35 @@
     background-color: #f1f1f1;
   }
 
+  .sales-report-dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .sales-report-options {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  .sales-report-dropdown:hover .sales-report-options {
+    display: block;
+  }
+  
+  .sales-report-options a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  .sales-report-options a:hover {
+    background-color: #f1f1f1;
+  }
+
 .nav-logo p {
     font-size: 36px;
     font-weight: bold;
