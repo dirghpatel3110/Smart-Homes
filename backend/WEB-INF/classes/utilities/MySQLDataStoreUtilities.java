@@ -750,6 +750,17 @@ public Map<Integer, Integer> getTopFiveMostSoldProducts() throws SQLException {
     return productsOnSale;
 }
 
+
+public void updateProductInventory(int productId, int quantity) throws SQLException {
+    String query = "UPDATE products SET availableItems = availableItems - ? WHERE id = ?";
+    try (Connection conn = getConnection();
+         PreparedStatement pst = conn.prepareStatement(query)) {
+        pst.setInt(1, quantity);
+        pst.setInt(2, productId);
+        pst.executeUpdate();
+    }
+}
+
 public List<Product> getProductsWithRebates() throws SQLException {
     List<Product> productsWithRebates = new ArrayList<>();
     String query = "SELECT * FROM products WHERE manufacturer_rebates > 0";
@@ -772,6 +783,33 @@ public List<Product> getProductsWithRebates() throws SQLException {
         }
     }
     return productsWithRebates;
+}
+
+    public List<Map<String, Object>> getProductSalesReport() throws SQLException {
+    List<Map<String, Object>> salesReport = new ArrayList<>();
+    String query = "SELECT p.id AS product_id, p.name AS product_name, p.price, " +
+                   "SUM(t.quantity) AS total_items_sold, " +
+                   "SUM(t.price * t.quantity) AS total_sales " +
+                   "FROM products p " +
+                   "JOIN transactions t ON p.id = t.product_id " +
+                   "WHERE t.order_status = 'Order Placed' " +
+                   "GROUP BY p.id, p.name, p.price";
+
+    try (Connection conn = getConnection();
+         PreparedStatement pst = conn.prepareStatement(query);
+         ResultSet rs = pst.executeQuery()) {
+        
+        while (rs.next()) {
+            Map<String, Object> productSales = new HashMap<>();
+            productSales.put("productId", rs.getInt("product_id"));
+            productSales.put("productName", rs.getString("product_name"));
+            productSales.put("price", rs.getDouble("price"));
+            productSales.put("totalItemsSold", rs.getInt("total_items_sold"));
+            productSales.put("totalSales", rs.getDouble("total_sales"));
+            salesReport.add(productSales);
+        }
+    }
+    return salesReport;
 }
 
 }
