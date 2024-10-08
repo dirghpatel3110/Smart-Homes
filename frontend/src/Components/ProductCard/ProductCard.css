@@ -11,6 +11,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  margin-right: 14px !important;
 }
 
 .category-filter label {
@@ -167,5 +168,46 @@
   animation: fadeIn 0.8s ease;
 } 
 
+.search-bar {
+  position: relative;
+  margin-top: 18px;
+  margin-left: 14px !important;
+}
+
+.search-bar input {
+  width: 100% !important;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.suggestions-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-top: none;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.suggestions-list li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestions-list li:hover {
+  background-color: #f0f0f0;
+}
 
 
+.set-btn{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 900px;
+}
