@@ -73,6 +73,14 @@ public class MySQLDataStoreUtilities {
     private static final String GET_LIKE_COUNT_SQL = "SELECT likes FROM products WHERE id = ?";
     private static final String GET_MOST_LIKED_PRODUCTS_SQL = "SELECT * FROM Products ORDER BY likes DESC LIMIT 5";
 
+
+    private static HashMap<String, Product> productMap;
+
+    static {
+        productMap = AjaxUtility.readProducts();
+    }
+
+
     protected Connection getConnection() throws SQLException {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -915,4 +923,13 @@ public List<Map<String, Object>> getDailySalesTransactions() throws SQLException
     return dailySales;
 }
 
+
+    public static HashMap<String, Product> getProductMap() {
+        return productMap;
+    }
+
+    public static void refreshProductMap() {
+        productMap = AjaxUtility.readProducts();
+    }
+    
 }
