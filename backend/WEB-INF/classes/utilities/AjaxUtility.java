@@ -3,8 +3,6 @@ package utilities;
 import model.Product;
 import java.sql.*;
 import java.util.*;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 public class AjaxUtility {
     private static final String jdbcURL = "jdbc:mysql://localhost:3306/SmartHomes";
@@ -42,21 +40,19 @@ public class AjaxUtility {
         return products;
     }
 
-    public static JSONArray readProductsAutocomplete(String searchId) {
-        JSONArray jsonArray = new JSONArray();
-        try {
-            HashMap<String, Product> products = readProducts();
-            for(Map.Entry<String, Product> entry : products.entrySet()) {
-                if(entry.getKey().toLowerCase().startsWith(searchId.toLowerCase())) {
-                    JSONObject productJson = new JSONObject();
-                    productJson.put("id", entry.getValue().getId());
-                    productJson.put("name", entry.getValue().getName());
-                    jsonArray.put(productJson);
-                }
+    public static String readProductsAutocomplete(String searchId) {
+    StringBuilder sb = new StringBuilder();
+    try {
+        HashMap<String, Product> products = readProducts();
+        for(Map.Entry<String, Product> entry : products.entrySet()) {
+            if(entry.getKey().toLowerCase().contains(searchId.toLowerCase())) {
+                sb.append(entry.getValue().getId()).append(",");
+                sb.append(entry.getValue().getName()).append("\n");
             }
-        } catch(Exception e) {
-            e.printStackTrace();
         }
-        return jsonArray;
+    } catch(Exception e) {
+        e.printStackTrace();
     }
+    return sb.toString();
+}
 }

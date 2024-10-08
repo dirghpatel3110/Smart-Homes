@@ -1,7 +1,6 @@
 package servlets;
 
 import utilities.AjaxUtility;
-import org.json.JSONArray;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,15 +12,17 @@ import java.io.PrintWriter;
 @WebServlet("/autocomplete")
 public class AutoCompleteServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("application/json");
+        response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
         String action = request.getParameter("action");
         String searchId = request.getParameter("searchId");
         
-        if (action.equals("complete")) {
-            JSONArray jsonArray = AjaxUtility.readProductsAutocomplete(searchId);
-            out.print(jsonArray.toString());
+        if ("complete".equals(action) && searchId != null && !searchId.trim().isEmpty()) {
+            String result = AjaxUtility.readProductsAutocomplete(searchId);
+            out.print(result);
+        } else {
+            out.print("No suggestions");
         }
         out.flush();
     }
