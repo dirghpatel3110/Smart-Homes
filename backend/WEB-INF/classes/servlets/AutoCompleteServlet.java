@@ -20,7 +20,7 @@ public class AutoCompleteServlet extends HttpServlet {
         
         if ("complete".equals(action) && searchId != null && !searchId.trim().isEmpty()) {
             String result = AjaxUtility.readProductsAutocomplete(searchId);
-            out.print(result);
+            out.print(result);   
         } else {
             out.print("No suggestions");
         }

@@ -14,7 +14,7 @@ public class AjaxUtility {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
-            String selectQuery = "SELECT * FROM products";
+            String selectQuery = "SELECT id, name FROM products";
             PreparedStatement pst = conn.prepareStatement(selectQuery);
             ResultSet rs = pst.executeQuery();
 
@@ -22,13 +22,6 @@ public class AjaxUtility {
                 Product product = new Product();
                 product.setId(rs.getInt("id"));
                 product.setName(rs.getString("name"));
-                product.setDescription(rs.getString("description"));
-                product.setPrice(rs.getDouble("price"));
-                product.setRetailerSpecialDiscounts(rs.getDouble("retailer_special_discounts"));
-                product.setManufacturerRebates(rs.getDouble("manufacturer_rebates"));
-                product.setWarrantyPrice(rs.getDouble("warranty_price"));
-                product.setCategory(rs.getString("category"));
-                product.setLikes(rs.getInt("likes"));
                 products.put(product.getName().toLowerCase(), product);
             }
             rs.close();
