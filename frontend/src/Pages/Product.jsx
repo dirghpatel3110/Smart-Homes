@@ -10,6 +10,8 @@
 //   const [categories, setCategories] = useState([]);
 //   const [selectedCategory, setSelectedCategory] = useState('All');
 //   const [selectedProduct, setSelectedProduct] = useState(null);
+//   const [searchTerm, setSearchTerm] = useState('');
+//   const [suggestions, setSuggestions] = useState([]);
 //   const navigate = useNavigate(); 
 
 //   useEffect(() => {
@@ -36,15 +38,60 @@
 //   const handleTrendingButtonClick = () => {
 //     navigate('/trending');
 //   };
+
+//   const handleSearchChange = (event) => {
+//     const value = event.target.value;
+//     setSearchTerm(value);
+    
+//     if (value.length > 0) {
+//       const filteredSuggestions = products.filter(product =>
+//         product.name.toLowerCase().includes(value.toLowerCase())
+//       );
+//       setSuggestions(filteredSuggestions.slice(0, 5)); // Limit to 5 suggestions
+//     } else {
+//       setSuggestions([]);
+//     }
+//   };
+
+//   const handleSuggestionSelect = (product) => {
+//     setSearchTerm(product.name);
+//     setSuggestions([]);
+//     setSelectedProduct(product);
+//   };
+
 //   const displayedProducts = selectedCategory === 'All' 
-//     ? filteredProducts 
-//     : filteredProducts.filter(product => product.category === selectedCategory);
+//     ? filteredProducts.filter(product => 
+//         product.name.toLowerCase().includes(searchTerm.toLowerCase())
+//       )
+//     : filteredProducts.filter(product => 
+//         product.category === selectedCategory && 
+//         product.name.toLowerCase().includes(searchTerm.toLowerCase())
+//       );
 
 //   return (
 //     <>
 //       <Navbar />
 
-//       <div>
+//       <div className="product-container">
+//         <div className='set-btn'>
+//         <div className="search-bar">
+//           <input
+//             type="text"
+//             placeholder="Search for products..."
+//             value={searchTerm}
+//             onChange={handleSearchChange}
+//           />
+//           {suggestions.length > 0 && (
+//             <ul className="suggestions-list">
+//               {suggestions.map((suggestion) => (
+//                 <li key={suggestion.id} onClick={() => handleSuggestionSelect(suggestion)}>
+//                   {suggestion.name}
+//                 </li>
+//               ))}
+//             </ul>
+//           )}
+//         </div>
+
 //         <div className="category-filter">
 //           <label htmlFor="category">Filter by category:</label>
 //           <select 
@@ -60,10 +107,11 @@
 //             ))}
 //           </select>  
 //         </div>
-
+//         </div>
 //         <button onClick={handleTrendingButtonClick} className="trending-button">
 //           View Trending
 //         </button>
+
 //         <div className="product-grid">
 //           {displayedProducts.length > 0 ? (
 //             displayedProducts.map((product) => (
@@ -74,41 +122,12 @@
 //           )}
 //         </div>
 
-//         {selectedProduct && (
-//           <div className="product-detail">
-//             <h2>{selectedProduct.name}</h2>
-//             <p>{selectedProduct.description}</p>
-//             <p><strong>Price:</strong> ${selectedProduct.price}</p>
-//             <p><strong>Retailer Special Discounts:</strong> ${selectedProduct.retailer_special_discounts}</p>
-//             <p><strong>Manufacturer Rebate:</strong> ${selectedProduct.manufacturer_rebate}</p>
-//             <p><strong>Warranty Price:</strong> ${selectedProduct.warranty_price}</p>
-//             <p><strong>Category:</strong> {selectedProduct.category}</p>
-//             <h3>Accessories:</h3>
-//             {selectedProduct.accessories && selectedProduct.accessories.length > 0 ? (
-//               <ul>
-//                 {selectedProduct.accessories.map((accessory, index) => (
-//                   <li key={index}>
-//                     {accessory.name} - ${accessory.price}
-//                   </li>
-//                 ))}
-//               </ul>
-//             ) : (
-//               <p>No accessories available</p>
-//             )}
-//             <button>Add to Cart</button>
-//             <p>Total: ${selectedProduct.price}</p>
-//           </div>
-//         )}
 //       </div>
 //     </>
 //   );
 // };
 
 // export default Product;
-
-
-
-
 
 
 
@@ -158,10 +177,18 @@ const Product = () => {
     setSearchTerm(value);
     
     if (value.length > 0) {
-      const filteredSuggestions = products.filter(product =>
-        product.name.toLowerCase().includes(value.toLowerCase())
-      );
-      setSuggestions(filteredSuggestions.slice(0, 5)); // Limit to 5 suggestions
+      axios.get(`http://localhost:8080/myservlet/autocomplete?action=complete&searchId=${value}`)
+        .then((response) => {
+          if (response.data !== 'No suggestions') {
+            setSuggestions(JSON.parse(response.data));
+          } else {
+            setSuggestions([]);
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching suggestions:', error);
+          setSuggestions([]);
+        });
     } else {
       setSuggestions([]);
     }
