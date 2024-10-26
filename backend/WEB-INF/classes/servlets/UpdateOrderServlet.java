@@ -24,7 +24,7 @@ public class UpdateOrderServlet extends HttpServlet {
             while ((line = reqReader.readLine()) != null) {
                 reqBody.append(line);
             }
-        }
+        }    
 
         JSONObject requestBody;
         try {

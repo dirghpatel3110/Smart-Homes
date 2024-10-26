@@ -15,6 +15,7 @@ import ProductInventoryBarChart from './Pages/ProductInventoryBarChart';
 import ProductSalesReport from './Pages/ProductSalesReport';
 import DailySalesTransactions from './Pages/DailySalesTransactions';
 import ProductSalesBarChart from './Pages/ProductSalesBarChart';
+import OpenTicketPage from './Pages/OpenTicketPage';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
       <Route path='/sales-report/product-sold' element={<ProductSalesReport/>}/>
       <Route path='/sales-report/daily-transactions' element={<DailySalesTransactions/>}/>
       <Route path='/sales-report/bar-chart' element={<ProductSalesBarChart/>}/>
+      <Route path="/customer-service/open-ticket" element={<OpenTicketPage />} />
       </Routes>
       </BrowserRouter>
     </div>

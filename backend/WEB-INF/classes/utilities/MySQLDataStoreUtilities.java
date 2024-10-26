@@ -81,14 +81,15 @@ public class MySQLDataStoreUtilities {
     }
 
 
-    protected Connection getConnection() throws SQLException {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            throw new SQLException("MySQL JDBC Driver not found", e);
-        }
-        return DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
+    public Connection getConnection() throws SQLException {
+    try {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+    } catch (ClassNotFoundException e) {
+        throw new SQLException("MySQL JDBC Driver not found", e);
     }
+    return DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
+}
+
 
     public List<Product> getAllProducts() throws SQLException {
         List<Product> products = new ArrayList<>();
@@ -612,6 +613,7 @@ public Store getStoreById(int storeId) throws SQLException {
          PreparedStatement preparedStatement = connection.prepareStatement(query)) {
         
         preparedStatement.setInt(1, userId); 
+        
         ResultSet resultSet = preparedStatement.executeQuery(); 
 
         while (resultSet.next()) {
@@ -646,6 +648,25 @@ public Store getStoreById(int storeId) throws SQLException {
         return rowsAffected > 0; 
     }
 }
+
+public Transaction getTransactionByOrderId(String OrderId) throws SQLException {
+        String query = "SELECT * FROM transactions WHERE order_id = ?";
+        try (Connection connection = getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, OrderId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    // Assuming Transaction has a constructor that matches your table's schema
+                    return new Transaction(
+                        rs.getString("order_id"),
+                        rs.getString("order_status")
+                        // Add other fields as necessary
+                    );
+                }
+            }
+        }
+        return null; // Return null if no transaction found
+    }
 
 
 public boolean deleteOrder(String orderID) throws SQLException {

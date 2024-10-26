@@ -29,6 +29,15 @@ public class Transaction {
     private String deliveryOption;
     private String orderStatus;
 
+    public Transaction() {
+    }
+
+    // Parameterized constructor
+    public Transaction(String orderId, String orderStatus) {
+        this.orderId = orderId;
+        this.orderStatus = orderStatus;
+    }
+
     public int getId() {
         return id;
     }

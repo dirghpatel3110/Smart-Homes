@@ -8,6 +8,7 @@ const Navbar = () => {
   const [activeLink, setActiveLink] = useState('');
   const [showInventoryOptions, setShowInventoryOptions] = useState(false);
   const [showSalesReportOptions, setShowSalesReportOptions] = useState(false);
+  const [showCustomerServiceOptions, setShowCustomerServiceOptions] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -42,6 +43,12 @@ const Navbar = () => {
     setShowInventoryOptions(false);
   };
 
+  const toggleCustomerServiceOptions = () => {
+    setShowCustomerServiceOptions(!showCustomerServiceOptions);
+    setShowInventoryOptions(false);
+    setShowSalesReportOptions(false);
+  };
+
   const inventoryOptions = [
     { name: 'Products Available', path: '/inventory/available' },
     { name: 'Bar Chart', path: '/inventory/bar-chart' },
@@ -53,6 +60,11 @@ const Navbar = () => {
     { name: 'Product Sold', path: '/sales-report/product-sold' },
     { name: 'Bar Chart', path: '/sales-report/bar-chart' },
     { name: 'Daily Sales Transactions', path: '/sales-report/daily-transactions' }
+  ];
+
+  const customerServiceOptions = [
+    { name: 'Open a Ticket', path: '/customer-service/open-ticket' },
+    { name: 'Status of a Ticket', path: '/customer-service/ticket-status' }
   ];
 
   return (
@@ -142,6 +154,7 @@ const Navbar = () => {
           </>
         )}
         {role === "Customer" && (
+          <>
           <button
             onClick={() => handleClick('/order')}
             style={{
@@ -158,6 +171,27 @@ const Navbar = () => {
               Order
             </Link>
           </button>
+          <div className="customer-service-dropdown">
+          <button onClick={toggleCustomerServiceOptions}>Customer Service</button>
+          {showCustomerServiceOptions && (
+            <div className="customer-service-options">
+              {customerServiceOptions.map((option, index) => (
+                <Link
+                  key={index}
+                  to={option.path}
+                  onClick={() => handleClick(option.path)}
+                  style={{
+                    color: activeLink === option.path ? 'blue' : '#515151',
+                    textDecoration: 'none',
+                  }}
+                >
+                  {option.name}
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+        </>
         )}
         <button onClick={handleLogout}>Logout</button>
         <Link to='/cart'>
