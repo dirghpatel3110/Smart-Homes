@@ -2,7 +2,7 @@ package utilities;
 
 import model.Product;
 import java.sql.*;
-import java.util.*;
+import java.util.*; 
 
 public class AjaxUtility {
     private static final String jdbcURL = "jdbc:mysql://localhost:3306/SmartHomes";
