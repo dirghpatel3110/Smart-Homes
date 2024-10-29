@@ -2,7 +2,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.servlet.ServletException;
-import model.Transaction; 
+import model.Transaction;
 import utilities.MySQLDataStoreUtilities;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -21,6 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Base64;
+import java.util.Random;
 
 @WebServlet("/validate_ticket_and_create")
 @MultipartConfig
@@ -28,7 +29,6 @@ public class ValidateOrderAndCreateTicketServlet extends HttpServlet {
     private final MySQLDataStoreUtilities dataStore = new MySQLDataStoreUtilities();
     private static final String API_KEY = "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"; // Replace with your actual OpenAI API key
 
-    // Instruction prompt to guide the model's decision-making
     private static final String instructionPrompt = "You are a customer service assistant for a delivery service, equipped to analyze images of packages. " +
             "If a package appears damaged in the image, automatically process a refund according to policy. " +
             "If the package looks wet, initiate a replacement. " +
@@ -46,14 +46,17 @@ public class ValidateOrderAndCreateTicketServlet extends HttpServlet {
             if (transaction == null) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.getWriter().write("Please provide a valid order ID.");
+                System.out.println("Invalid Order ID: " + orderId);
                 return;
             }
 
             if (!"delivered".equalsIgnoreCase(transaction.getOrderStatus())) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.getWriter().write("Order not delivered yet.");
+                System.out.println("Order ID " + orderId + " has status: " + transaction.getOrderStatus());
                 return;
             }
+
 
             String imageBase64 = Base64.getEncoder().encodeToString(imagePart.getInputStream().readAllBytes());
             String decision = callOpenAiApi(imageBase64);
@@ -62,7 +65,8 @@ public class ValidateOrderAndCreateTicketServlet extends HttpServlet {
 
             resp.setStatus(HttpServletResponse.SC_CREATED);
             JSONObject responseJson = new JSONObject();
-            responseJson.put("message", "Ticket created successfully with ID: " + ticketNumber);
+            // responseJson.put("message", "Ticket created successfully with ID: " + ticketNumber);
+            responseJson.put("message", "Your Order was not delivered yet");
             responseJson.put("decision", decision);
             resp.setContentType("application/json");
             resp.getWriter().write(responseJson.toString());
@@ -82,10 +86,10 @@ public class ValidateOrderAndCreateTicketServlet extends HttpServlet {
         connection.setDoOutput(true);
 
         JSONObject payload = new JSONObject();
-        payload.put("model", "gpt-4o-mini"); // Specify model
+        payload.put("model", "gpt-4o-mini");
         payload.put("messages", new JSONArray()
-                .put(new JSONObject().put("role", "system").put("content", instructionPrompt)) // Instruction for the model
-                .put(new JSONObject().put("role", "user").put("content", "Analyze the following image and make a decision.")) 
+                .put(new JSONObject().put("role", "system").put("content", instructionPrompt))
+                .put(new JSONObject().put("role", "user").put("content", "Analyze the following image and make a decision."))
                 .put(new JSONObject().put("role", "user").put("content", new JSONArray()
                         .put(new JSONObject().put("type", "image_url").put("image_url",
                                 new JSONObject().put("url", "data:image/jpeg;base64," + imageBase64))))));
@@ -102,28 +106,29 @@ public class ValidateOrderAndCreateTicketServlet extends HttpServlet {
                 responseBuilder.append(responseLine.trim());
             }
             JSONObject responseJson = new JSONObject(responseBuilder.toString());
-            
-            // Extract and return only the decision content
+
             return responseJson.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content");
         }
     }
 
     private int createTicket(String orderId, String description, String decision) throws SQLException {
-        String insertQuery = "INSERT INTO tickets (order_id, description, decision) VALUES (?, ?, ?)";
+        int ticketNumber = generateRandomTicketNumber();
+
+        String insertQuery = "INSERT INTO tickets (ticket_number, order_id, description, decision) VALUES (?, ?, ?, ?)";
         try (Connection connection = dataStore.getConnection();
-             PreparedStatement ps = connection.prepareStatement(insertQuery, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, orderId);
-            ps.setString(2, description);
-            ps.setString(3, decision);
+             PreparedStatement ps = connection.prepareStatement(insertQuery)) {
+            ps.setInt(1, ticketNumber);
+            ps.setString(2, orderId);
+            ps.setString(3, description);
+            ps.setString(4, decision);
             ps.executeUpdate();
 
-            try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (rs.next()) {
-                    return rs.getInt(1); // Get the generated ticket number
-                } else {
-                    throw new SQLException("Failed to retrieve generated ticket number.");
-                }
-            }
+            return ticketNumber;
         }
+    }
+
+    private int generateRandomTicketNumber() {
+        Random random = new Random();
+        return 100000 + random.nextInt(900000); // Generates a 6-digit random number
     }
 }

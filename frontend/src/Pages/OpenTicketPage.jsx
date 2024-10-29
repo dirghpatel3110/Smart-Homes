@@ -34,6 +34,8 @@ const OpenTicketPage = () => {
             if (!response.ok) {
                 const errorMessage = await response.text();
                 throw new Error(errorMessage);
+                setDecision(''); 
+                return;
             }
 
             const data = await response.json();
@@ -41,6 +43,7 @@ const OpenTicketPage = () => {
             setDecision(data.decision);
         } catch (error) {
             setMessage(`Error: ${error.message}`);
+            setDecision('');
         }
     };
 
