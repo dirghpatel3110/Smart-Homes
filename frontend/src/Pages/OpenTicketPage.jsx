@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Navbar from '../Components/Navbar/Navbar';
+import './CSS/OpenTicketPage.css'
 
 const OpenTicketPage = () => {
     const [orderId, setOrderId] = useState('');
@@ -41,6 +42,10 @@ const OpenTicketPage = () => {
             const data = await response.json();
             setMessage(data.message);
             setDecision(data.decision);
+
+            if(data.ticketNumber){
+                alert(`Ticket Number: ${data.ticketNumber} keep with you for futher checking`)
+            }
         } catch (error) {
             setMessage(`Error: ${error.message}`);
             setDecision('');
@@ -52,7 +57,7 @@ const OpenTicketPage = () => {
         <Navbar/>
         <div className="open-ticket-page">
             <h2>Create a Ticket</h2>
-            <form onSubmit={handleSubmit}>
+            <form  className='open-form'onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="orderId">Order ID:</label>
                     <input
@@ -79,15 +84,15 @@ const OpenTicketPage = () => {
                         onChange={handleImageChange}
                     />
                 </div>
-                <button type="submit">Submit</button>
+                <button className='open-btn'type="submit">Submit</button>
             </form>
-            {message && <p>{message}</p>}
+            {/* {message && <p>{message}</p>}
             {decision && (
                 <div>
                     <h3>Decision</h3>
                     <p>{decision}</p>
                 </div>
-            )}
+            )} */}
         </div>
         </>
     );

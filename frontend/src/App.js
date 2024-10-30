@@ -16,6 +16,7 @@ import ProductSalesReport from './Pages/ProductSalesReport';
 import DailySalesTransactions from './Pages/DailySalesTransactions';
 import ProductSalesBarChart from './Pages/ProductSalesBarChart';
 import OpenTicketPage from './Pages/OpenTicketPage';
+import TicketDecisionPage from './Pages/TicketDecisionPage';
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
       <Route path='/sales-report/daily-transactions' element={<DailySalesTransactions/>}/>
       <Route path='/sales-report/bar-chart' element={<ProductSalesBarChart/>}/>
       <Route path="/customer-service/open-ticket" element={<OpenTicketPage />} />
+      <Route path='/customer-service/ticket-status' element={<TicketDecisionPage/>}/>
       </Routes>
       </BrowserRouter>
     </div>

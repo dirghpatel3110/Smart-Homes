@@ -65,8 +65,7 @@ public class ValidateOrderAndCreateTicketServlet extends HttpServlet {
 
             resp.setStatus(HttpServletResponse.SC_CREATED);
             JSONObject responseJson = new JSONObject();
-            // responseJson.put("message", "Ticket created successfully with ID: " + ticketNumber);
-            responseJson.put("message", "Your Order was not delivered yet");
+            responseJson.put("ticketNumber", ticketNumber);
             responseJson.put("decision", decision);
             resp.setContentType("application/json");
             resp.getWriter().write(responseJson.toString());
@@ -131,4 +130,56 @@ public class ValidateOrderAndCreateTicketServlet extends HttpServlet {
         Random random = new Random();
         return 100000 + random.nextInt(900000); // Generates a 6-digit random number
     }
+
+
+
+
+
+    @Override
+protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    String ticketNumberParam = req.getParameter("ticketNumber");
+
+    if (ticketNumberParam == null || ticketNumberParam.isEmpty()) {
+        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        resp.getWriter().write("Please provide a valid ticket number.");
+        return;
+    }
+
+    try {
+        int ticketNumber = Integer.parseInt(ticketNumberParam);
+        JSONObject ticketDetails = getTicketDetails(ticketNumber);
+        if (ticketDetails == null) {
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            resp.getWriter().write("No ticket found for the given ticket number.");
+        } else {
+            resp.setContentType("application/json");
+            resp.getWriter().write(ticketDetails.toString());
+        }
+    } catch (NumberFormatException e) {
+        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        resp.getWriter().write("Invalid ticket number format.");
+    } catch (SQLException e) {
+        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        resp.getWriter().write("Error retrieving ticket: " + e.getMessage());
+    }
+}
+
+private JSONObject getTicketDetails(int ticketNumber) throws SQLException {
+    String query = "SELECT ticket_number, order_id, description, decision FROM tickets WHERE ticket_number = ?";
+    try (Connection connection = dataStore.getConnection();
+         PreparedStatement ps = connection.prepareStatement(query)) {
+        ps.setInt(1, ticketNumber);
+
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                JSONObject ticketJson = new JSONObject();
+                ticketJson.put("ticketNumber", rs.getInt("ticket_number"));
+                ticketJson.put("decision", rs.getString("decision"));
+                return ticketJson;
+            }
+        }
+    }
+    return null;
+}
+
 }
