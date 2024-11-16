@@ -4,6 +4,7 @@ import ProductCard from '../Components/ProductCard/ProductCard';
 import SemanticSearch from './SemanticSearch';
 import Navbar from '../Components/Navbar/Navbar';
 import { useNavigate } from 'react-router-dom';
+import SemanticReviews from './SemanticReviews';
 
 const Product = () => {
   const [products, setProducts] = useState([]);
@@ -54,6 +55,7 @@ const Product = () => {
       <div className="product-container">
         <div className='set-btn'>
         <SemanticSearch/>
+        <SemanticReviews/>
         <div className="category-filter">
           <label htmlFor="category">Filter by category:</label>
           <select 
