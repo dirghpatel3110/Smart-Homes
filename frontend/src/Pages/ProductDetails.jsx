@@ -9,7 +9,7 @@ import Navbar from "../Components/Navbar/Navbar";
 Modal.setAppElement("#root"); // Required for accessibility
 
 const ProductDetails = () => {
-  const location = useLocation();
+  const location = useLocation(); 
   const navigate = useNavigate();
   const product = location.state?.product;
 

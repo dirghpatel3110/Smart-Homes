@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ProductCard from '../Components/ProductCard/ProductCard'; 
+import SemanticSearch from './SemanticSearch';
 import Navbar from '../Components/Navbar/Navbar';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,7 +12,6 @@ const Product = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [suggestions, setSuggestions] = useState([]);
   const navigate = useNavigate(); 
 
   useEffect(() => {
@@ -39,34 +39,6 @@ const Product = () => {
     navigate('/trending');
   };
 
-  const handleSearchChange = (event) => {
-    const value = event.target.value;
-    setSearchTerm(value);
-    
-    if (value.length > 0) {
-      axios.get(`http://localhost:8080/myservlet/autocomplete?action=complete&searchId=${value}`)
-        .then((response) => {
-          if (response.data !== 'No suggestions') {
-            setSuggestions(JSON.parse(response.data));
-          } else {
-            setSuggestions([]);
-          }
-        })
-        .catch((error) => {
-          console.error('Error fetching suggestions:', error);
-          setSuggestions([]);
-        });
-    } else {
-      setSuggestions([]);
-    }
-  };
-
-  const handleSuggestionSelect = (product) => {
-    setSearchTerm(product.name);
-    setSuggestions([]);
-    setSelectedProduct(product);
-  };
-
   const displayedProducts = selectedCategory === 'All' 
     ? filteredProducts.filter(product => 
         product.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -79,27 +51,9 @@ const Product = () => {
   return (
     <>
       <Navbar />
-
       <div className="product-container">
         <div className='set-btn'>
-        <div className="search-bar">
-          <input
-            type="text"
-            placeholder="Search for products..."
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
-          {suggestions.length > 0 && (
-            <ul className="suggestions-list">
-              {suggestions.map((suggestion) => (
-                <li key={suggestion.id} onClick={() => handleSuggestionSelect(suggestion)}>
-                  {suggestion.name}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
+        <SemanticSearch/>
         <div className="category-filter">
           <label htmlFor="category">Filter by category:</label>
           <select 

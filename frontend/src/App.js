@@ -17,6 +17,8 @@ import DailySalesTransactions from './Pages/DailySalesTransactions';
 import ProductSalesBarChart from './Pages/ProductSalesBarChart';
 import OpenTicketPage from './Pages/OpenTicketPage';
 import TicketDecisionPage from './Pages/TicketDecisionPage';
+import SemanticSearch from './Pages/SemanticSearch';
+import SearchResultsPage from './Pages/SearchResultsPage';
 
 function App() {
   return (
@@ -40,6 +42,8 @@ function App() {
       <Route path='/sales-report/bar-chart' element={<ProductSalesBarChart/>}/>
       <Route path="/customer-service/open-ticket" element={<OpenTicketPage />} />
       <Route path='/customer-service/ticket-status' element={<TicketDecisionPage/>}/>
+      <Route path="/product" element={<SemanticSearch />} />
+      <Route path="/search-results" element={<SearchResultsPage />} />
       </Routes>
       </BrowserRouter>
     </div>
