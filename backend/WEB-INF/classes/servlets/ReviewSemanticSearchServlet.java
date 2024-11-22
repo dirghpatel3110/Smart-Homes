@@ -71,14 +71,6 @@ public class ReviewSemanticSearchServlet extends HttpServlet {
         connection.setDoOutput(true);
 
         String jsonInputString = "{"
-                + "\"query\": {"
-                + "\"bool\": {"
-                + "\"must\": ["
-                + "{ \"range\": { \"ReviewRating\": { \"gt\": 4 } } },"
-                + "{ \"range\": { \"ReviewDate\": { \"gte\": \"2024-09-26\" } } }"
-                + "]"
-                + "}"
-                + "},"
                 + "\"knn\": {"
                 + "\"field\": \"review_vector\","
                 + "\"query_vector\": " + parsedEmbedding + ","
