@@ -14,7 +14,7 @@ const Signup = () => {
     city:'',
     state:'',
     zipCode:''
-  });
+  });  
 
   const changeHandler = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

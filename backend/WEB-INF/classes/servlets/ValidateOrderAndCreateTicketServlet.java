@@ -27,7 +27,7 @@ import java.util.Random;
 @MultipartConfig
 public class ValidateOrderAndCreateTicketServlet extends HttpServlet {
     private final MySQLDataStoreUtilities dataStore = new MySQLDataStoreUtilities();
-    private static final String API_KEY = "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"; // Replace with your actual OpenAI API key
+    private static final String API_KEY = "OPENAI-API-KEY"; 
 
     private static final String instructionPrompt = "You are a customer service assistant for a delivery service, equipped to analyze images of packages. " +
             "If a package appears damaged in the image, automatically process a refund according to policy. " +

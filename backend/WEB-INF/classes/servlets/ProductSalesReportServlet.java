@@ -34,7 +34,7 @@ public class ProductSalesReportServlet extends HttpServlet {
                 jsonObject.put("price", productSales.get("price"));
                 jsonObject.put("totalItemsSold", productSales.get("totalItemsSold"));
                 jsonObject.put("totalSales", productSales.get("totalSales"));
-                jsonArray.put(jsonObject);
+                jsonArray.put(jsonObject); 
 
                 // Update product inventory
                 int productId = (int) productSales.get("productId");

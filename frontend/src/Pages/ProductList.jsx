@@ -15,7 +15,7 @@ export default function ProductList() {
   const [confirmModalIsOpen, setConfirmModalIsOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
   const [editedProduct, setEditedProduct] = useState({
-    id: '',
+    id: '',  
     name: '',
     price: '',
     description: '',

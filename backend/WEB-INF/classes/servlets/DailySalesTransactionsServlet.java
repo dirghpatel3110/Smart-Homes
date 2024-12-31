@@ -27,7 +27,7 @@ public class DailySalesTransactionsServlet extends HttpServlet {
         try {
             List<Map<String, Object>> dailySales = dataStore.getDailySalesTransactions();
             JSONArray jsonArray = new JSONArray();
-            
+             
             for (Map<String, Object> daySales : dailySales) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("date", ((Date) daySales.get("date")).toString());
