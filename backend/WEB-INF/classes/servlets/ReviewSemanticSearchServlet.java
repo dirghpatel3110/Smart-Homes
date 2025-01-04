@@ -17,7 +17,7 @@ import java.util.Scanner;
 public class ReviewSemanticSearchServlet extends HttpServlet {
 
     private static final String ELASTICSEARCH_URL = "http://localhost:9200/reviews_index/_search";
-    private static final String OPENAI_API_KEY = "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";
+    private static final String OPENAI_API_KEY = "OPENAI_API_KEY";
     private static final String EMBEDDING_MODEL = "text-embedding-3-small";
 
     @Override
